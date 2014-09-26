@@ -87,13 +87,13 @@ Voltの核となる機能の多くはすでに実装済みです。
 2. [レンダリング](#レンダリング)
   1. [リアクティブバリュー](#リアクティブバリュー)
     1. [ReactiveValueについて気に留めておくべきこと](#ReactiveValueについて気に留めておくべきこと)
-3. [Views](#views)
-  1. [Bindings](#bindings)
-    1. [Content Binding](#content-binding)
-    2. [If Binding](#if-binding)
-    3. [Each Binding](#each-binding)
-    4. [Attribute Bindings](#attribute-bindings)
-    5. [Escaping](#escaping)
+3. [ビュー](#ビュー)
+  1. [バインディング](#バインディング)
+    1. [コンテンツバインディング](#コンテンツバインディング)
+    2. [ifバインディング](#ifバインディング)
+    3. [eachバインディング](#eachバインディング)
+    4. [attribute(属性)バインディング](#attribute(属性)バインディング)
+    5. [エスケープ](#エスケープ)
 4. [Models](#models)
   1. [Provided Collections](#provided-collections)
   2. [Reactive Models](#reactive-models)
@@ -352,7 +352,7 @@ ifバインディングがレンダリングされるときは、#if に続くRu
     {/}
 ```
 
-### Eachバインディング
+### eachバインディング
 
 オブジェクトのイテレーションのために、eachバインディングが用意されています。
 
@@ -382,7 +382,7 @@ ifバインディングがレンダリングされるときは、#if に続くRu
 
 配列の要素が追加、または削除された場合には、#eachバインディングは自動的かつ正確に、要素をDOMに追加、もしくはDOMから削除します。
 
-## Attribute(属性)バインディング
+## attribute(属性)バインディング
 
 バインディングは属性の中にも配置することができます。
 

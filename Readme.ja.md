@@ -427,7 +427,9 @@ Voltにおいて、モデルはデータを簡単に保存しておくために�
 Persistor無しでモデルを作った場合には、データは単純にクラスのインスタンスに保存されます。
 どのようにモデルを使うのか、まず見てみましょう。
 
-Volt comes with many built-in models; one is called `page`.  If you call `#page` on a controller, you will get access to the model.  Models provided by Volt are automatically wrapped in a ReactiveValue so update events can be tracked.
+Voltには多くのモデルがビルトインされており、その1つに `page` モデルがあります。
+コントローラーで `#page` を呼び出すことでモデルにアクセスすることができます。
+Voltが提供するモデルはReactiveValueに自動的にラップされているので、更新のイベントを追跡することが可能です。
 
 Volt
 
@@ -437,9 +439,13 @@ Volt
     # => @'Ryan'
 ```
 
-Models act like a hash that you can access with getters and setters that start with an _ .  If an underscore method is called that hasn't yet been assigned, you will get back a "nil model".  Prefixing with an underscore makes sure we don't accidentally try to call a method that doesn't exist and get back nil model instead of raising an exception.  There is no need to define which fields a model has. Fields behave similarly to a hash, but with a different access and assignment syntax.
+モデルは、アンダースコア(_)で始まるゲッター/セッターでアクセス可能なハッシュのように振る舞います。
+もし、その「アンダースコアメソッド」がまだアサインされていなかった場合には、"nilモデル"が返ってきます。
+アンダースコアを前置することによって、存在しないメソッドを誤って呼び出すことを回避したり、例外が発生することを避けnilモデルを返すようにすることができます。
+モデルがどのようなフィールドを持つかを定義しておく必要はありません。
+フィールドはハッシュのように振る舞いますが、アクセスと代入については異なるシンタックスを使用します。
 
-Models also let you nest data without creating the intermediate models:
+また、モデルは中間的なモデルを作成することなくネストすることができます。
 
 ```ruby
     page._settings._color = 'blue'

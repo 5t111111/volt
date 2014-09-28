@@ -497,9 +497,11 @@ Voltの提供するモデルはすべてReactiveValueでラップされている
 Voltにおいて、すべてのデータを保持するのはモデルの役割です。
 ReactiveValueを手動で扱うこともできますが、ほとんどの場合、コントローラーモデルのように扱うことになるでしょう。
 
-## Model Events
+## モデルイベント
 
-Models trigger events when their data is updated.  Currently, models emit three events: changed, added, and removed.  For example:
+モデルは、そのデータが更新されたときにイベントをトリガーします。
+現在、モデルは、changed, added, removed の3つのイベントを発生させます。
+
 
 ```ruby
     model = Model.new
@@ -517,7 +519,7 @@ Models trigger events when their data is updated.  Currently, models emit three 
     # => item removed
 ```
 
-## Automatic Model Conversion
+## 自動モデル変換
 
 ### Hash -> Model
 

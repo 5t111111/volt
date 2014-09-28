@@ -473,20 +473,21 @@ Voltのモデルでは、複数形の名前を持ったプロパティは配列(
 
 ArrayModelsに対しては、通常の配列と同じように追加や参照を行うことができます。
 
-## Provided Collections
+## 提供されるコレクション
 
-Above, I mentioned that Volt comes with many default collection models accessible from a controller.  Each stores in a different location.
+前述の通り、Voltにはコントローラーからアクセス可能な豊富なデフォルトのコレクションモデルが搭載されています。
+そして、そのそれぞれが異なる場所に保存されます。
 
-| Name      | Storage Location                                                          |
-|-----------|---------------------------------------------------------------------------|
-| page      | page provides a temporary store that only lasts for the life of the page. |
-| store     | store syncs the data to the backend database and provides query methods.  |
-| session   | values will be stored in a session cookie.                                |
-| params    | values will be stored in the params and URL.  Routes can be setup to change how params are shown in the URL.  (See routes for more info) |
-| flash     | any strings assigned will be shown at the top of the page and cleared as the user navigates between pages. |
-| controller| a model for the current controller                                        |
+| 名前      | 保存場所                                                                                                                           |
+|-----------|------------------------------------------------------------------------------------------------------------------------------------|
+| page      | pageは一時的なデータ保存場所を提供します。そのページが生きている間だけ残ります。                                                   |
+| store     | storeはバックエンドのデータベースと動機し、クエリメソッドを提供します。                                                            |
+| session   | データはセッションクッキーに保存されます。                                                                                         |
+| params    | データはパラメータとURLに保存されます。どのようにURLに表示するかはルーティングの設定にしたがいます。(詳細はルートを御覧ください。) |
+| flash     | 代入された文字列がページの先頭に表示され、ユーザーによるページの移動で消去されます。                                               |
+| controller| 現在のコントローラーのためのモデルです。                                                                                           |
 
-**more storage locations are planned**
+**上記以外のストレージについても計画中です。**
 
 ## Reactive Models
 

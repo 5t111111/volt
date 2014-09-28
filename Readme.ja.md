@@ -489,9 +489,13 @@ ArrayModelsに対しては、通常の配列と同じように追加や参照を
 
 **上記以外のストレージについても計画中です。**
 
-## Reactive Models
+## リアクティブモデル
 
-Because all models provided by Volt are wrapped in a ReactiveValue, you can register listeners on them and be updated when values change.  You can also call methods on their values and get updates when the sources change.  Bindings also setup listeners.  Models should be the main place you store all data in Volt.  While you can use ReactiveValues manually, most of the time you will want to just use something like the controller model.
+Voltの提供するモデルはすべてReactiveValueでラップされているため、リスナーを登録しておいて、値の変更に応じて更新を行うことができます。
+また、元となるものが変更された場合にそれらの値に対してメソッドを呼び出し更新をすることができます。
+バインディングもまたリスナーを設定します。
+Voltにおいて、すべてのデータを保持するのはモデルの役割です。
+ReactiveValueを手動で扱うこともできますが、ほとんどの場合、コントローラーモデルのように扱うことになるでしょう。
 
 ## Model Events
 

@@ -456,9 +456,11 @@ Volt
     # => @#<Model:_settings {:_color=>"blue"}>
 ```
 
-Nested data is automatically setup when assigned.  In this case, page._settings is a model that is part of the page model.
+ネストされたデータは、代入時に自動的に設定されます。
+上記の例では、page._settingはpageモデルの一部を形成するモデルとなります。
 
-You can also append to a model if it's not defined yet.  In Volt models, plural properties are assumed to contain arrays (or more specifically, ArrayModels).
+また、定義されていないデータの場合には追加することができます。
+Voltのモデルでは、複数形の名前を持ったプロパティは配列(より厳密に言えばArrayModels)を持っているとされます。
 
 ```ruby
     page._items << 'item 1'
@@ -469,7 +471,7 @@ You can also append to a model if it's not defined yet.  In Volt models, plural 
     # => @"item 1"
 ```
 
-ArrayModels can be appended to and accessed just like regular arrays.
+ArrayModelsに対しては、通常の配列と同じように追加や参照を行うことができます。
 
 ## Provided Collections
 

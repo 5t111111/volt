@@ -524,8 +524,8 @@ ReactiveValueを手動で扱うこともできますが、ほとんどの場合�
 ### Hash -> Model
 
 
-利便性のために、あるモデルの中にハッシュを入れた場合には、自動的にモデルに変換されます。
-モデルはハッシュに似ていますが、例えば永続化やイベントのトリガなどの機能がある点が異なります。
+利便性のために、あるModelの中にHashを入れた場合、それは自動的にModelに変換されます。
+ModelはHashに似ていますが、例えば永続化やイベントのトリガなどの機能がある点が異なります。
 
 ```ruby
     user = Model.new
@@ -543,15 +543,16 @@ ReactiveValueを手動で扱うこともできますが、ほとんどの場合�
     # => Model
 ```
 
-モデルへのアクセスのしかたはハッシュとは異なります。`model[:symbol]`を使うのではなく、`model.method_name`メソッドを呼び出します。
+ModelへのアクセスのしかたはHashとは異なります。`model[:symbol]`を使うのではなく、`model.method_name`メソッドを呼び出します。
 これは動的に生成される統一的なデータ保存機構であり、アクセスのためのコードを変更することなく、セッターとゲッターが追加されます。
 
-モデルに対して`#to_h`を実行すると、Rubyのハッシュに戻したものを得ることができます。
+Modelに対して`#to_h`を実行すると、RubyのHashに戻したものを得ることができます。
 
 
 ### Array -> ArrayModel
 
-Arrays inside of models are automatically converted to an instance of ArrayModel.  ArrayModels behave the same as a normal Array except that they can handle things like being bound to backend data and triggering reactive events.
+Modelの中のArrayは自動的にArrayModelのインスタンスに変換されます。
+ArrayModelは通常のArrayと同様に振る舞いますが、バックエンドのデータにバインドしたり、リアクティブイベントを発生させたりできる点が異なります。
 
 ```ruby
     model = Model.new
@@ -565,7 +566,8 @@ Arrays inside of models are automatically converted to an instance of ArrayModel
 ```
 
 
-To convert a Model or an ArrayModel back to a normal hash, call .to_h or .to_a respectively.  To convert them to a JavaScript Object (for passing to some JavaScript code), call `#to_n` (to native).
+ModelやArrayModelを通常のハッシュに戻したい場合には、それぞれ .to_h と .to_a を実行してください。
+(JavaScriptのコードに渡すために)JavaScriptのオブジェクトに変換したい場合には、`#to_n` (to native)を実行してください。
 
 ```ruby
     user = Model.new
@@ -582,7 +584,8 @@ To convert a Model or an ArrayModel back to a normal hash, call .to_h or .to_a r
     items
 ```
 
-You can get a normal array again by calling .to_a on an ArrayModel.
+ArrayModelに対して.to_aを実行することで通常の配列を得ることができます。
+
 
 # Controllers
 

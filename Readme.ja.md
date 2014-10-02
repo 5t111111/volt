@@ -573,8 +573,8 @@ ModelやArrayModelを通常のハッシュに戻したい場合には、それ�
     user = Model.new
     user._name = 'Ryan'
     user._profiles = {
-      twitter: 'http://www.twitter.com/ryanstout',
-      dribbble: 'http://dribbble.com/ryanstout'
+      _twitter: 'http://www.twitter.com/ryanstout',
+      _dribbble: 'http://dribbble.com/ryanstout'
     }
 
     user._profiles.to_h

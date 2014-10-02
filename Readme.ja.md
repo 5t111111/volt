@@ -523,7 +523,9 @@ ReactiveValueを手動で扱うこともできますが、ほとんどの場合�
 
 ### Hash -> Model
 
-For convenience, when placing a hash inside of another model, it is automatically converted into a model.  Models are similar to hashes, but provide support for things like persistence and triggering reactive events.
+
+利便性のために、あるモデルの中にハッシュを入れた場合には、自動的にモデルに変換されます。
+モデルはハッシュに似ていますが、例えば永続化やイベントのトリガなどの機能がある点が異なります。
 
 ```ruby
     user = Model.new
@@ -541,9 +543,11 @@ For convenience, when placing a hash inside of another model, it is automaticall
     # => Model
 ```
 
-Models are accessed differently from hashes.  Instead of using `model[:symbol]` to access, you call a method `model.method_name`.  This provides a dynamic unified store where setters and getters can be added without changing any access code.
+モデルへのアクセスのしかたはハッシュとは異なります。`model[:symbol]`を使うのではなく、`model.method_name`メソッドを呼び出します。
+これは動的に生成される統一的なデータ保存機構であり、アクセスのためのコードを変更することなく、セッターとゲッターが追加されます。
 
-You can get a Ruby hash back out by calling `#to_h` on a Model.
+モデルに対して`#to_h`を実行すると、Rubyのハッシュに戻したものを得ることができます。
+
 
 ### Array -> ArrayModel
 

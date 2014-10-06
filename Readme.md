@@ -1,27 +1,27 @@
-[![Gem Version](https://badge.fury.io/rb/volt.svg)](http://badge.fury.io/rb/volt)
-[![Code Climate](http://img.shields.io/codeclimate/github/voltrb/volt.svg)](https://codeclimate.com/github/voltrb/volt)
-[![Build Status](http://img.shields.io/travis/voltrb/volt/master.svg)](https://travis-ci.org/voltrb/volt)
+[![Gem Version](https://badge.fury.io/rb/volt.png)](http://badge.fury.io/rb/volt)
+[![Code Climate](https://codeclimate.com/github/voltrb/volt.png)](https://codeclimate.com/github/voltrb/volt)
+[![Build Status](https://travis-ci.org/voltrb/volt.png?branch=master)](https://travis-ci.org/voltrb/volt)
 [![Inline docs](http://inch-ci.org/github/voltrb/volt.svg?branch=master)](http://inch-ci.org/github/voltrb/volt)
-[![Volt Chat](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/voltrb/volt)
+[![Volt Chat](https://badges.gitter.im/voltrb/volt.png)](https://gitter.im/voltrb/volt)
 
 ** For the current status of volt, read: http://voltframework.com/blog
 
 # Volt
 
-Volt is a Ruby web framework where your ruby code runs on both the server and the client (via [opal](https://github.com/opal/opal)).  The DOM automatically updates as the user interacts with the page. Page state can be stored in the URL. If the user hits a URL directly, the HTML will first be rendered on the server for faster load times and easier indexing by search engines.
+Volt is a Ruby web framework where your ruby code runs on both the server and the client (via [opal](https://github.com/opal/opal)).  The DOM automatically update as the user interacts with the page. Page state can be stored in the URL. If the user hits a URL directly, the HTML will first be rendered on the server for faster load times and easier indexing by search engines.
 
 Instead of syncing data between the client and server via HTTP, Volt uses a persistent connection between the client and server. When data is updated on one client, it is updated in the database and any other listening clients (with almost no setup code needed).
 
-Pages HTML is written in a handlebars-like template language.  Volt uses data flow/reactive programming to automatically and intelligently propagate changes to the DOM (or any other code wanting to know when a value updates).  When something in the DOM changes, Volt intelligently updates only the nodes that need to be changed.
+Pages HTML is written in a handlebars-like template language.  Volt uses data flow/reactive programming to automatically and intelligently propagate changes to the DOM (or anything other code wanting to know when a value updates).  When something in the DOM changes, Volt intelligently updates only the nodes that need to be changed.
 
 See some demo videos here:
-** Note: These videos are outdated, new videos coming tomorrow.
  - [Volt Todos Example](https://www.youtube.com/watch?v=6ZIvs0oKnYs)
  - [Build a Blog with Volt](https://www.youtube.com/watch?v=c478sMlhx1o)
  - [Reactive Values in Volt](https://www.youtube.com/watch?v=yZIQ-2irY-Q)
 
 Check out demo apps:
  - https://github.com/voltrb/todos3
+ - https://github.com/voltrb/blog
  - https://github.com/voltrb/contactsdemo
 
 
@@ -44,8 +44,10 @@ Volt has the following goals:
 
 Many of the core Volt features are implemented.  We still have a bit to go before 1.0, most of it involving models.
 
-1. Model read/write permissions
-2. User accounts, user collection, signup/login templates
+1. Reactive model queries
+2. Reactive Enumerators with Blocks (.map .count, etc…)
+3. Full managed render loop (for fast rendering)
+4. Fix N+1 issue with some reactive values (I know how to fix it, just haven't gotten around to doing it)
 
 # VOLT guide
 
@@ -71,29 +73,21 @@ You can access the Volt console with:
 
 1. [Getting Help](#getting-help)
 2. [Rendering](#rendering)
-  1. [States and Computations](#state-and-computations)
-    1. [Computations](#computations)
-  2. [Dependencies](#dependencies)
+  1. [Reactive Values](#reactive-values)
+    1. [ReactiveValue Gotchas](#reactivevalue-gotchas)
 3. [Views](#views)
   1. [Bindings](#bindings)
     1. [Content Binding](#content-binding)
     2. [If Binding](#if-binding)
     3. [Each Binding](#each-binding)
     4. [Attribute Bindings](#attribute-bindings)
-  2. [Escaping](#escaping)
+    5. [Escaping](#escaping)
 4. [Models](#models)
-  1. [Nil Models](#nil-models)
-  2. [Provided Collections](#provided-collections)
-  3. [Store Collection](#store-collection)
-  4. [Sub Collections](#sub-collections)
-  5. [Model Classes](#model-classes)
-  6. [Buffers](#buffers)
-  7. [Validations](#validations)
-  8. [Model State](#model-state)
-  9. [ArrayModel Events](#arraymodel-events)
-  10. [Automatic Model Conversion](#automatic-model-conversion)
+  1. [Provided Collections](#provided-collections)
+  2. [Reactive Models](#reactive-models)
+  3. [Model Events](#model-events)
+  4. [Automatic Model Conversion](#automatic-model-conversion)
 5. [Controllers](#controllers)
-  1. [Reactive Accessors](#reactive-accessors)
 6. [Tasks](#tasks)
 7. [Components](#components)
   1. [Dependencies](#dependencies)
@@ -106,11 +100,7 @@ You can access the Volt console with:
 9. [Routes](#routes)
   1. [Routes file](#routes-file)
 10. [Testing](#testing)
-11. [Debugging](#debugging)
-12. [Volt Helpers](#volt-helpers)
-  1. [Logging](#logging)
-  2. [App Configuration](#app-configuration)
-13. [Contributing](#contributing)
+
 
 # Getting Help
 
@@ -119,7 +109,7 @@ Volt is still a work in progress, but early feedback is appreciated.  Use the fo
 - **If you need help**: post on [stackoverflow.com](http://www.stackoverflow.com). Be sure to tag your question with `voltrb`.
 - **If you found a bug**: post on [github issues](https://github.com/voltrb/volt/issues)
 - **If you have an idea or need a feature**: post on [github issues](https://github.com/voltrb/volt/issues)
-- **If you want to discuss Volt**: [chat on gitter](https://gitter.im/voltrb/volt), someone from the volt team is usually online and happy to help with anything.
+- **If you want to discuss Volt**: use #voltrb on freenode.
 
 
 # Rendering
@@ -129,75 +119,136 @@ When a user interacts with a web page, typically we want to do two things:
 1. Change application state
 2. Update the DOM
 
-For example when a user clicks to add a new todo item to a todo list, we might create an object to represent the todo item, then add an item to the list's DOM.  A lot of work needs to be done to make sure that the object and the DOM always stay in sync.
+For example when a user clicks to add a new todo item to a todo list, we might create a JavaScript object to represent the todo item, then add an item to the list's DOM.  A lot of work needs to be done to make sure that the JavaScript object and the DOM always stay in sync.
 
-The idea of "reactive programming" can be used to simplify maintaining the DOM.  Instead of having event handlers that manage a model and manage the DOM, we have event handlers that manage reactive data models.  We describe our DOM layer in a declarative way so that it automatically knows how to render our data models.
+The idea of "reactive programming" has been used to simplify maintaining the DOM.  The idea is instead of having event handlers that manage a model (or JavaScript object) and manage the DOM, we have event handlers that manage reactive data models.  We describe our DOM layer in a declarative way so that it automatically knows how to render our data models.
 
-## State and Computations
+## Reactive Values
 
-Web applications center around maintaining state.  Many events can trigger changes to a state.  Page interaction like entering text into form elements, clicking a button, links, scrolling, etc.. can all change the state of the app.  In the past, each page interaction event would manually change any state stored on a page.
-
-To simplify managing application state, all application state is kept in models that can optionally be persisted in different locations.  By centralizing the application state, we reduce the amount of complex code needed to update a page.  We can then build our page's html declaratively.  The relationship to the page's models' are bound using function and method calls.
-
-We want our DOM to automatically update when our model data changes.  To make this happen, Volt lets you "watch" any method/proc call and have it get called again when data accessed by the method/proc call changes.
-
-### Computations
-
-Lets take a look at this in practice.  We'll use the ```page``` collection as an example.  (You'll see more on collections later)
-
-First, we setup a computation watch.  Computations are built by calling .watch! on a Proc.  Here we'll use the ruby 1.9 proc shorthand syntax ```-> { ... }``` It will run once, then run again each time the data in page._name changes.
-```ruby
-    page._name = 'Ryan'
-    -> { puts page._name }.watch!
-    # => Ryan
-    page._name = 'Jimmy'
-    # => Jimmy
-```
-
-Each time page._name is assigned to a new value, the computation is run again.  A re-run of the computation will be triggered when any data accessed in the previous run is changed.  This lets us access data through methods and still have watches re-triggered.
+To build bindings, Volt provides the ReactiveValue class.  This wraps any object in a reactive interface.  To create a ReactiveValue, simply pass the object you want to wrap as the first argument to new.
 
 ```ruby
-    page._first = 'Ryan'
-    page._last = 'Stout'
-
-    def lookup_name
-      return "#{page._first} #{page._last}"
-    end
-
-    -> do
-      puts lookup_name
-    end.watch!
-    # => Ryan Stout
-
-    page._first = 'Jimmy'
-    # => Jimmy Stout
-
-    page._last = 'Jones'
-    # => Jimmy Jones
+    a = ReactiveValue.new("my object")
+    # => @"my object"
 ```
 
-When you call .watch! the return value is a Computation object.  In the event you no longer want to receive updates, you can call .stop on the computation.
+When `#inspect` is called on a ReactiveValue (like in the console), an '@' is placed in front of the value's inspect string, so you know it's reactive.
+
+When you call a method on a ReactiveValue, you get back a new reactive value that depends on the previous one.  It remembers how it was created and you can call `#cur` on it any time to get its current value, which will be computed based off of the first reactive value.  (Keep in mind below that + is a method call, the same as `a.+(b)` in ruby.)
 
 ```ruby
-    page._name = 'Ryan'
+    a = ReactiveValue.new(1)
+    a.reactive?
+    # => true
 
-    comp = -> { puts page._name }.watch!
-    # => Ryan
+    a.cur
+    # => 1
 
-    page._name = 'Jimmy'
-    # => Jimmy
+    b = a + 5
+    b.reactive?
+    # => true
 
-    comp.stop
+    b.cur
+    # => 6
 
-    page._name = 'Jo'
-    # (nothing)
+    a.cur = 2
+    b.cur
+    # => 7
 ```
 
-## Dependencies
+This provides the backbone for reactive programming.  We setup computation/flow graphs instead of doing an actual calculation.  Calling `#cur` (or `#inspect`, `#to_s`, etc..) runs the computation and returns the current value at that time, based on all of its dependencies.
 
-TODO: Explain Dependencies
+ReactiveValues also let you setup listeners and trigger events:
 
-As a Volt user, you rarely need to use Comptuations and Dependencies directly.  Instead you usually just interact with models and bindings.  Computations are used under the hood, and having a full understanding of what's going on is useful, but not required.
+```ruby
+    a = ReactiveValue.new(0)
+    a.on('changed') { puts "A changed" }
+    a.trigger!('changed')
+    # => A Changed
+```
+
+These events propagate to any reactive values created off of a reactive value:
+
+```ruby
+    a = ReactiveValue.new(1)
+    b = a + 5
+    b.on('changed') { puts "B changed" }
+
+    a.trigger!('changed')
+    # => B changed
+```
+
+This event flow lets us know when an object has changed, so we can update everything that depended on that object.
+
+Lastly, we can also pass in other reactive values as arguments to methods on a reactive value.  The dependencies will be tracked for both and events will propagate down from both.  (Also, note that calling `#cur=` to update the current value triggers a "changed" event.)
+
+```ruby
+    a = ReactiveValue.new(1)
+    b = ReactiveValue.new(2)
+    c = a + b
+
+    a.on('changed') { puts "A changed" }
+    b.on('changed') { puts "B changed" }
+    c.on('changed') { puts "C changed" }
+
+    a.cur = 3
+    # => A changed
+    # => C changed
+
+    b.cur = 5
+    # => B changed
+    # => C changed
+```
+
+### ReactiveValue Gotchas
+
+There are a few simple things to keep in mind with ReactiveValues.  In order to make them mostly compatible with other Ruby objects, two methods do not return another ReactiveValue.
+
+    to_s and inspect
+
+If you want these to be used reactively, see the section on [with](#with).
+
+Also, due to a small limitation in ruby, ReactiveValues always are truthy.  See the [truthy checks](#truthy-checks-true-false-or-and-and) section on how to check for truth.
+
+When passing something that may contain reactive values to a JS function, you can call ```#deep_cur``` on any object to get back a copy that will have all reactive values turned into their current value.
+
+### Current Status
+
+NOTE: currently ReactiveValues are not complete.  At the moment, they do not handle methods that are passed blocks (or procs, lambdas).  This is planned, but not complete.  At the moment you can use [with](#with) to accomplish similar things.
+
+### Truthy Checks: .true?, .false?, .or, and .and
+
+Because a method on a reactive value always returns another reactive value, and because only nil and false are false in ruby, we need a way to check if a ReactiveValue is truthy in our code.  The easiest way to do this is by calling .true? on it.  It will return a non-wrapped boolean.  .nil? and .false? do as you would expect.
+
+One common place we use a truthy check is in setting up default values with || (logical or)  Volt provides a convenient method that does the same thing `#or`, but works with ReactiveValues.
+
+Instead of
+
+```ruby
+    a || b
+```
+
+Simply use:
+
+```ruby
+    a.or(b)
+```
+
+`#and` works the same way as &&.  #and and #or let you maintain the reactivity all of the way through.
+
+
+### With
+
+Normally when you want to have a value that depends on another value, but transforms it somehow, you simply call your transform method on the ReactiveValue.  However sometimes the transform is not directly on the ReactiveValues object.
+
+You can call `#with` on any ReactiveValue.  `#with` will return a new ReactiveValue that depends on the current ReactiveValue.  `#with` takes a block, the first argument to the block will be the cur value of the ReactiveValue you called `#with` on.  Any additional arguments to `#with` will be passed in after the first one.  If you pass another ReactiveValue as an argument to `#with`, the returned ReactiveValue will depend on the argument ReactiveValue as well, and the block will receive the arguments cur value.
+
+```ruby
+    a = ReactiveValue.new(5)
+    b = a.with {|v| v + 10 }
+    b.cur
+    # => 15
+```
 
 # Views
 
@@ -213,52 +264,52 @@ Sections help you split up different parts of the same content (title and body u
 
 ## Bindings
 
-In Volt, you code your views in a handlebars like template language.  Volt provides several bindings, which handle rendering of something for you. Content bindings are anything inbetween {{ and }}.
+Once you understand the basics of ReactiveValues, we can discuss bindings. In Volt, you code your views in a handlebars like template language.  Volt provides several bindings, which handle rendering of something for you. Content bindings are anything inbetween { and }.
 
 ### Content binding
 
 The most basic binding is a content binding:
 
 ```html
-    <p>{{ some_method }}<p>
+    <p>{some_method}<p>
 ```
 
-The content binding runs the Ruby code between {{ and }}, then renders the return value.  Any time the data a content binding relies on changes, the binding will run again and update the text
+The content binding runs the Ruby code between { and }, then renders the return value.  If the returned value is a ReactiveValue, it will update the value updated whenever a 'changed' event is triggered on the reactive value.
 
 ### If binding
 
 An if binding lets you provide basic flow control.
 
 ```html
-    {{ if _some_check? }}
+    {#if _some_check?}
       <p>render this</p>
-    {{ end }}
+    {/}
 ```
 
-Blocks are closed with a {{ end }}
+Blocks are closed with a {/}
 
 When the if binding is rendered, it will run the ruby code after #if.  If the code is true it will render the code below.  Again, if the returned value is reactive, it will update as that value changes.
 
 If bindings can also have #elsif and #else blocks.
 
 ```html
-    {{ if _condition_1? }}
+    {#if _condition_1?}
       <p>condition 1 true</p>
-    {{ elsif _condition_2? }}
+    {#elsif _condition_2?}
       <p>condition 2 true</p>
-    {{ else }}
+    {#else}
       <p>neither true</p>
-    {{ end }}
+    {/}
 ```
 
 ### Each binding
 
-For iteration over objects, you can use .each
+For iteration over objects, the each binding is provided.
 
 ```html
-    {{ _items.each do |item| }}
-      <p>{{ item }}</p>
-    {{ end }}
+    {#each _items as item}
+      <p>{item}</p>
+    {/}
 ```
 
 Above, if _items were an array, the block would be rendered for each item, setting 'item' to the value of the array element.
@@ -266,9 +317,9 @@ Above, if _items were an array, the block would be rendered for each item, setti
 You can also access the position of the item in the array with the #index method.
 
 ```html
-    {{ each _items as item }}
-      <p>{{ index }}. {{ item }}</p>
-    {{ end }}
+    {#each _items as item}
+      <p>{index}. {item}</p>
+    {/}
 ```
 
 For the array: ['one', 'two', 'three'] this would print:
@@ -277,88 +328,57 @@ For the array: ['one', 'two', 'three'] this would print:
     1. two
     2. three
 
-You can do {{ index + 1 }} to correct the zero offset.
+You can do {index + 1} to correct the zero offset.
 
 When items are removed or added to the array, the #each binding automatically and intelligently adds or removes the items from/to the DOM.
 
-### Attribute Bindings
+## Attribute Bindings
 
 Bindings can also be placed inside of attributes.
 
 ```html
-    <p class="{{ if _is_cool? }}cool{{ end }}">Text</p>
+    <p class="{#if _is_cool?}cool{/}">Text</p>
 ```
 
 There are some special features provided to make elements work as "two way bindings":
 
 ```html
-    <input type="text" value="{{ _name }}" />
+    <input type="text" value="{_name}" />
 ```
 
 In the example above, if _name changes, the field will update, and if the field is updated, _name will be changed:
 
 ```html
-    <input type="checkbox" checked="{{ _checked }}" />
+    <input type="checkbox" checked="{_checked}" />
 ```
 
 If the value of a checked attribute is true, the checkbox will be shown checked. If it's checked or unchecked, the value will be updated to true or false.
 
-Radio buttons bind to a checked state as well, except instead of setting the value to true or false, they set it to a supplied field value.
-
-```html
-    <input type="radio" checked="{{ _radio }}" value="one" />
-    <input type="radio" checked="{{ _radio }}" value="two" />
-```
-
-When a radio button is checked, whatever checked is bound to is set to the field's value.  When the checked binding value is changed, any radio buttons where the binding's value matches the fields value are checked.  NOTE: This seems to be the most useful behaviour for radio buttons.
-
-Select boxes can be bound to a value (while not technically a property, this is another convient behavior we add).
-
-```html
-  <select value="{{ _rating }}">
-    <option value="1">*</option>
-    <option value="2">**</option>
-    <option value="3">***</option>
-    <option value="4">****</option>
-    <option value="5">*****</option>
-  </select>
-```
-
-When the selected option of the select above changes, ```_rating``` is changed to match.  When ```_rating``` is changed, the selected value is changed to the first option with a matching value.  If no matching values are found, the select box is unselected.
+-- TODO: select boxes
 
 If you have a controller at app/home/controller/index_controller.rb, and a view at app/home/views/index/index.html, all methods called are called on the controller.
 
-### Template Bindings
-
-All views/*.html files are templates that can be rendered inside of other views using the template binding.
-
-```html
-    {{ template "header" }}
-```
-
 ## Escaping
 
-When you need to use {{ and }} outside of bindings, anything in a triple mustache will be escaped and not processed as a binding:
+When you need to use { and } outside of bindings, anything in a triple mustache will be escaped and not processed as a binding:
 
 ```html
-    {{{ bindings look like: {{this}}  }}}
+    {{{ bindings look like: {this}  }}}
 ```
 
 # Models
 
-Volt's concept of a model is slightly different from many frameworks where a model is the name for the ORM to the database.  In Volt a model is a class where you can store data easily.  Models can be created with a "Persistor", which is responsible for storing the data in the model somewhere.  Models created without a persistor, simply store the data in the classes instance.  Lets first see how to use a model.
+Volt's concept of a model is slightly different from many frameworks where a model is the name for the ORM to the database.  In Volt a model is a class where you can store data easily.  Models can be created with a "Persistor", which is responsible for storing the data in the model.  Models created without a persistor, simply store the data in the classes instance.  Lets first see how to use a model.
 
-Volt comes with many built-in models; one is called `page`.  If you call `#page` on a controller, you will get access to the model.
+Volt comes with many built-in models; one is called `page`.  If you call `#page` on a controller, you will get access to the model.  Models provided by Volt are automatically wrapped in a ReactiveValue so update events can be tracked.
 
 ```ruby
     page._name = 'Ryan'
     page._name
-    # => 'Ryan'
+    # => @'Ryan'
 ```
 
-Models act like a hash that you can access with getters and setters that start with an underscore.  If an attribute is accessed that hasn't yet been assigned, you will get back a "nil model".  Prefixing with an underscore makes sure we don't accidentally try to call a method that doesn't exist and get back nil model instead of raising an exception. Fields behave similarly to a hash, but with a different access and assignment syntax.
-
-  # TODO: Add docs on fields in classes
+Models act like a hash that you can access with getters and setters that start with an _ .  If an underscore method is called that hasn't yet been assigned, you will get back a "nil model".  Prefixing with an underscore makes sure we don't accidentally try to call a method that doesn't exist and get back nil model instead of raising an exception.  There is no need to define which fields a model has. Fields behave similarly to a hash, but with a different access and assignment syntax.
 
 Models also let you nest data without creating the intermediate models:
 
@@ -371,238 +391,50 @@ Models also let you nest data without creating the intermediate models:
     # => @#<Model:_settings {:_color=>"blue"}>
 ```
 
-Nested data is automatically setup when assigned.  In this case, page._settings is a model that is part of the page model.  This allows nested models to be bound to a binding without the need to setup the model before use.
+Nested data is automatically setup when assigned.  In this case, page._settings is a model that is part of the page model.
 
-In Volt models, plural properties return an ArrayModel instance.  ArrayModels behave the same way as normal arrays.  You can add/remove items to the array with normal array methods (#<<, push, append, delete, delete_at, etc...)
+You can also append to a model if it's not defined yet.  In Volt models, plural properties are assumed to contain arrays (or more specifically, ArrayModels).
 
 ```ruby
+    page._items << 'item 1'
     page._items
-    # #<ArrayModel:70303686333720 []>
-
-    page._items << {_name: 'Item 1'}
-
-    page._items
-    # #<ArrayModel:70303686333720 [<Model:70303682055800 {:_name=>"Item 1"}>]>
-
-    page._items.size
-    # => 1
+    # => @#<ArrayModel ["item 1", "item 2"]>
 
     page._items[0]
-    # => <Model:70303682055800 {:_name=>"Item 1"}>
+    # => @"item 1"
 ```
 
-
-## Nil Models
-
-As a convience, calling something like ```page._info``` returns what's called a NilModel (assuming it isn't already initialized).  NilModels are place holders for future possible Models.  NilModels allow us to bind deeply nested values without initializing any intermediate values.
-
-```ruby
-    page._info
-    # => <Model:70260787225140 nil>
-
-    page._info._name
-    # => <Model:70260795424200 nil>
-
-    page._info._name = 'Ryan'
-    # => <Model:70161625994820 {:_info=><Model:70161633901800 {:_name=>"Ryan"}>}>
-```
-
-One gotchya with NilModels is that they are a truthy value (since only nil and false are falsy in ruby).  To make things easier, calling ```.nil?``` on a NilModel will return true.
-
-One common place we use a truthy check is in setting up default values with || (logical or)  Volt provides a convenient method that does the same thing `#or`, but works with NilModels.
-
-Instead of
-
-```ruby
-    a || b
-```
-
-Simply use:
-
-```ruby
-    a.or(b)
-```
-
-`#and` works the same way as &&.  #and and #or let you easily deal with default values involving NilModels.
-
--- TODO: Document .true? / .false?
-
+ArrayModels can be appended to and accessed just like regular arrays.
 
 ## Provided Collections
 
 Above, I mentioned that Volt comes with many default collection models accessible from a controller.  Each stores in a different location.
 
-| Name        | Storage Location                                                          |
-|-------------|---------------------------------------------------------------------------|
-| page        | page provides a temporary store that only lasts for the life of the page. |
-| store       | store syncs the data to the backend database and provides query methods.  |
-| local_store | values will be stored in the local_store                                  |
-| params      | values will be stored in the params and URL.  Routes can be setup to change how params are shown in the URL.  (See routes for more info) |
-| flash       | any strings assigned will be shown at the top of the page and cleared as the user navigates between pages. |
-| controller  | a model for the current controller                                        |
+| Name      | Storage Location                                                          |
+|-----------|---------------------------------------------------------------------------|
+| page      | page provides a temporary store that only lasts for the life of the page. |
+| store     | store syncs the data to the backend database and provides query methods.  |
+| session   | values will be stored in a session cookie.                                |
+| params    | values will be stored in the params and URL.  Routes can be setup to change how params are shown in the URL.  (See routes for more info) |
+| flash     | any strings assigned will be shown at the top of the page and cleared as the user navigates between pages. |
+| controller| a model for the current controller                                        |
 
 **more storage locations are planned**
 
-## Store Collection
+## Reactive Models
 
-The store collection backs data in the data store.  Currently the only supported data store is Mongo. (More coming soon, RethinkDb will probably be next)  You can use store very similar to the other collections.
+Because all models provided by Volt are wrapped in a ReactiveValue, you can register listeners on them and be updated when values change.  You can also call methods on their values and get updates when the sources change.  Bindings also setup listeners.  Models should be the main place you store all data in Volt.  While you can use ReactiveValues manually, most of the time you will want to just use something like the controller model.
 
-In Volt you can access ```store``` on the front-end and the back-end.  Data will automatically be synced between the front-end and the backend.  Any changes to the data in store will be reflected on any clients using the data (unless a [buffer](#buffer) is in use - see below).
+## Model Events
 
-```ruby
-    store._items << {_name: 'Item 1'}
-
-    store._items[0]
-    # => <Model:70303681865560 {:_name=>"Item 1", :_id=>"e6029396916ed3a4fde84605"}>
-```
-
-Inserting into ```store._items``` will create a ```_items``` table and insert the model into it.  An pseudo-unique _id will be automatically generated.
-
-Currently one difference between ```store``` and other collections is ```store``` does not store properties directly.  Only ArrayModels are allowed directly on ```store```
-
-```ruby
-    store._something = 'yes'
-    # => won't be saved at the moment
-```
-
-Note: We're planning to add support for direct ```store``` properties.
-
-## Sub Collections
-
-Models can be nested on ```store```
-
-```ruby
-    store._states << {_name: 'Montana'}
-    montana = store._states[0]
-
-    montana._cities << {_name: 'Bozeman'}
-    montana._cities << {_name: 'Helena'}
-
-    store._states << {_name: 'Idaho'}
-    idaho = store._states[1]
-
-    idaho._cities << {_name: 'Boise'}
-    idaho._cities << {_name: 'Twin Falls'}
-
-    store._states
-    # #<ArrayModel:70129010999880 [<Model:70129010999460 {:_name=>"Montana", :_id=>"e3aa44651ff2e705b8f8319e"}>, <Model:70128997554160 {:_name=>"Montana", :_id=>"9aaf6d2519d654878c6e60c9"}>, <Model:70128997073860 {:_name=>"Idaho", :_id=>"5238883482985760e4cb2341"}>, <Model:70128997554160 {:_name=>"Montana", :_id=>"9aaf6d2519d654878c6e60c9"}>, <Model:70128997073860 {:_name=>"Idaho", :_id=>"5238883482985760e4cb2341"}>]>
-```
-
-You can also create a Model first and then insert it.
-
-```ruby
-    montana = Model.new({_name: 'Montana'})
-
-    montana._cities << {_name: 'Bozeman'}
-    montana._cities << {_name: 'Helena'}
-
-    store._states << montana
-```
-
-## Model Classes
-
-By default all collections use the Model class by default.
-
-```ruby
-    page._info.class
-    # => Model
-```
-
-You can provide classes that will be loaded in place of the standard model class.  You can place these in any app/{component}/models folder.  For example, you could add ```app/main/info.rb```  Model classes should inherit from ```Model```
-
-```ruby
-    class Info < Model
-    end
-```
-
-Now when you access any sub-collection called ```_info```, it will load as an instance of ```Info```
-
-```ruby
-    page._info.class
-    # => Info
-```
-
-This lets you set custom methods and validations within collections.
-
-## Buffers
-
-Because the store collection is automatically synced to the backend, any change to a model's property will result in all other clients seeing the change immediately.  Often this is not the desired behavior.  To facilitate building [CRUD](http://en.wikipedia.org/wiki/Create,_read,_update_and_delete) apps, Volt provides the concept of a "buffer".  A buffer can be created from one model and will not save data back to its backing model until .save! is called on it.  This lets you create a form thats not saved until a submit button is pressed.
-
-```ruby
-    store._items << {_name: 'Item 1'}
-
-    item1 = store._items[0]
-
-    item1_buffer = item1.buffer
-
-    item1_buffer._name = 'Updated Item 1'
-    item1_buffer._name
-    # => 'Updated Item 1'
-
-    item1._name
-    # => 'Item 1'
-
-    item1_buffer.save!
-
-    item1_buffer._name
-    # => 'Updated Item 1'
-
-    item1._name
-    # => 'Updated Item 1'
-```
-
-```#save!``` on buffer also returns a [promise](http://opalrb.org/blog/2014/05/07/promises-in-opal/) that will resolve when the data has been saved back to the server.
-
-```ruby
-    item1_buffer.save!.then do
-      puts "Item 1 saved"
-    end.fail do |err|
-      puts "Unable to save because #{err}"
-    end
-```
-
-Calling .buffer on an existing model will return a buffer for that model instance.  If you call .buffer on an ArrayModel (plural sub-collection), you will get a buffer for a new item in that collection.  Calling .save! will then add the item to that sub-collection as if you had done << to push the item into the collection.
-
-## Validations
-
-Within a model class, you can setup validations.  Validations let you restrict the types of data that can be stored in a model.  Validations are mostly useful for the ```store``` collection, though they can be used elsewhere.
-
-At the moment we only have two validations implemented (length and presence).  Though a lot more will be coming.
-
-```ruby
-    class Info < Model
-      validate :_name, length: 5
-      validate :_state, presence: true
-    end
-```
-
-When calling save on a model with validations, the following occurs:
-
-1. Client side validations are run; if they fail, the promise from ```save!``` is rejected with the error object.
-2. The data is sent to the server and client and server side validations are run on the server; any failures are returned and the promise is rejected on the front-end (with the error object)
-    - re-running the validations on the server side makes sure that no data can be saved that doesn't pass the validations
-3. If all validations pass, the data is saved to the database and the promise resolved on the client.
-4. The data is synced to all other clients.
-
-
-## Model State
-
-**Work in progress**
-
-| state       | events bound | description                                                  |
-|-------------|--------------|--------------------------------------------------------------|
-| not_loaded  | no           | no events and no one has accessed the data in the model      |
-| loading     | maybe        | someone either accessed the data or bound an event           |
-| loaded      | yes          | data is loaded and there is an event bound                   |
-| dirty       | no           | data was either accessed without binding an event, or an event was bound, but later unbound. |
-
-
-## ArrayModel Events
-
-Models trigger events when their data is updated.  Currently, models emit two events: added and removed.  For example:
+Models trigger events when their data is updated.  Currently, models emit three events: changed, added, and removed.  For example:
 
 ```ruby
     model = Model.new
+
+    model._name.on('changed') { puts 'name changed' }
+    model._name = 'Ryan'
+    # => name changed
 
     model._items.on('added') { puts 'item added' }
     model._items << 1
@@ -655,24 +487,22 @@ Arrays inside of models are automatically converted to an instance of ArrayModel
 ```
 
 
-To convert a Model or an ArrayModel back to a normal hash, call .to_h or .to_a respectively.  To convert them to a JavaScript Object (for passing to some JavaScript code), call `#to_n` (to native).
+To convert a Model or an ArrayModel back to a normal hash or a normal array, call .to_h or .to_a respectively.  To convert them to a JavaScript Object (for passing to some JavaScript code), call `#to_n` (to native).
 
 ```ruby
     user = Model.new
     user._name = 'Ryan'
     user._profiles = {
-      _twitter: 'http://www.twitter.com/ryanstout',
-      _dribbble: 'http://dribbble.com/ryanstout'
+      twitter: 'http://www.twitter.com/ryanstout',
+      dribbble: 'http://dribbble.com/ryanstout'
     }
 
     user._profiles.to_h
-    # => {_twitter: 'http://www.twitter.com/ryanstout', _dribbble: 'http://dribbble.com/ryanstout'}
+    # => {twitter: 'http://www.twitter.com/ryanstout', dribbble: 'http://dribbble.com/ryanstout'}
 
     items = ArrayModel.new([1,2,3,4])
-    # => #<ArrayModel:70226521081980 [1, 2, 3, 4]>
-
     items.to_a
-    # => [1,2,3,4]
+    # => [1, 2, 3, 4]
 ```
 
 You can get a normal array again by calling .to_a on an ArrayModel.
@@ -701,8 +531,6 @@ A controller can be any class in Volt, however it is common to have that class i
     end
 ```
 
-When a model is set, any missing methods will be proxied to the model.  This lets you bind within the views without prefixing the model object every time.  It also lets you change out the current model and have the views update automatically.
-
 In methods, the `#model` method returns the current model.
 
 See the [provided collections](#provided-collections) section for a list of the available collection models.
@@ -711,7 +539,7 @@ You can also provide your own object to model.
 
 In the example above, any methods not defined on the TodosController will fall through to the provided model.  All views in views/{controller_name} will have this controller as the target for any Ruby run in their bindings.  This means that calls on self (implicit or with self.) will have the model as their target (after calling through the controller).  This lets you add methods to the controller to control how the model is handled, or provide extra methods to the views.
 
-Volt is more similar to an MVVM architecture than an MVC architecture.  Instead of the controllers passing data off to the views, the controllers are the context for the views.  When using a ModelController, the controller automatically forwards all methods it does not handle to the model.  This is convenient since you can set a model in the controller and then access its properties directly with methods in bindings.  This lets you do something like ```{{ _name }}``` instead of something like ```{{ @model._name }}```
+Volt is more similar to an MVVM architecture than an MVC architecture.  Instead of the controllers passing data off to the views, the controllers are the context for the views.  When using a ModelController, the controller automatically forwards all methods it does not handle to the model.  This is convenient since you can set a model in the controller and then access its properties directly with methods in bindings.  This lets you do something like ```{_name}``` instead of something like ```{@model._name}```
 
 Controllers in the app/home component do not need to be namespaced, all other components should namespace controllers like so:
 
@@ -868,6 +696,7 @@ or
 
 To find the control's views and optional controller, Volt will search the following (in order):
 
+
 | Section   | View File    | View Folder    | Component   |
 |-----------|--------------|----------------|-------------|
 | :{name}   |              |                |             |
@@ -915,40 +744,23 @@ Once the view file for the control or template is found, it will look for a matc
 
 # Control Arguments/Attributes
 
-Like other html tags, controls can be passed attributes.  These are then converted into an object that is passed as the first argument to the initialize method on the controller.  The standard ModelController's initialize will then assign the object to the attrs property which can be accessed with ```#attrs```  This makes it easy to access attributes passed in.
+Like other html tags, controls can be passed attributes.  These are then converted into a hash and passed as the first argument to the initialize method on the controller.  The standard ModelController's initialize will then assign each key/value in the attributes hash as instance values.  This makes it easy to access attributes passed in.
 
 ```html
 
 <:Body>
 
   <ul>
-    {{ _todos.each do |todo| }}
-      <:todo name="{{ todo._name }}" />
-    {{ end }}
+    {#each _todos as todo}
+      <:todo name="{todo._name}" />
+    {/}
   </ul>
 
 <:Todo>
-  <li>{{ attrs.name }}</li>
+  <li>{@name}</li>
+
 ```
 
-Instead of passing in individual attributes, you can also pass in a Model object with the "model" attribute and it will be set as the model for the controller.
-
-```html
-<:Body>
-  <ul>
-    {{ _todos.each do |todo| }}
-      <:todo model="{{ todo }}" />
-    {{ end }}
-  </ul>
-
-<:Todo>
-  <li>
-    {{ _name }} -
-    {{ if _complete }}
-      Complete
-    {{ end }}
-  </li>
-```
 
 # Routes
 
@@ -971,7 +783,7 @@ When the params are changed, the URL will be set to the path for the route whose
 Route paths can also contain variables similar to bindings:
 
 ```ruby
-    get "/todos/{{ _index }}", _view: 'todos'
+    get "/todos/{_index}", _view: 'todos'
 ```
 
 In the case above, if any URL matches /todos/*, (where * is anything but a slash), it will be the active route. ```params._view``` would be set to 'todos', and ```params._index``` would be set to the value in the path.
@@ -980,7 +792,16 @@ If ```params._view``` were 'todos' and ```params._index``` were not nil, the rou
 
 Routes are matched top to bottom in a routes file.
 
-# Channel
+## Debugging
+
+An in browser irb is in the works.  We also have source maps support, but they are currently disabled by default.  To enable them run:
+
+    MAPS=true volt s
+
+This feature is disabled by default because (due to the volume of pages rendered) it slows down page rendering. We're working with the opal and sprockets teams to make it so everything is still served in one big source maps file (which would show the files as they originated on disk)
+
+
+## Channel
 
 Controllers provide a `#channel` method, that you can use to get the status of the connection to the backend.  Channel is provided in a ReactiveValue, and when the status changes, the changed events are triggered.  It provides the following:
 
@@ -1012,50 +833,27 @@ To run Capybara tests, you need to specify a driver.  The following drivers are 
 
 Chrome is not supported due to [this issue](https://code.google.com/p/chromedriver/issues/detail?id=887#makechanges) with ChromeDriver.  Feel free to go [here](https://code.google.com/p/chromedriver/issues/detail?id=887#makechanges) and pester the chromedriver team to fix it.
 
-# Debugging
-
-An in browser irb is in the works.  We also have source maps support, but they are currently disabled by default.  To enable them run:
-
-    MAPS=true volt s
-
-This feature is disabled by default because (due to the volume of pages rendered) it slows down page rendering. We're working with the opal and sprockets teams to make it so everything is still served in one big source maps file (which would show the files as they originated on disk)
-
-# Volt Helpers
-
-## Logging
-
-Volt provides a helper for logging.  Calling ```Volt.logger``` returns an instance of the ruby logger.  See [here](http://www.ruby-doc.org/stdlib-2.1.3/libdoc/logger/rdoc/Logger.html) for more.
-
-```ruby
-Volt.logger.info("Some info...")
-```
-
-You can change the logger with:
-
-```ruby
-Volt.logger = Logger.new
-```
-
-## App Configuration
-
-Like many frameworks, Volt changes some default settings based on an environment flag.  You can set the volt environment with the VOLT_ENV environment variable.
-
-All files in the app's ```config``` folder are loaded when Volt boots.  This is similar to the ```initializers``` folder in Rails.
-
-Volt does its best to start with useful defaults.  You can configure things like your database and app name in the config/app.rb file.  The following are the current configuration options:
-
-| name      | default                   | description                                                   |
-|-----------|---------------------------|---------------------------------------------------------------|
-| app_name  | the current folder name   | This is used internally for things like logging.              |
-| db_driver | 'mongo'                   | Currently mongo is the only supported driver, more coming soon|
-| db_name   | "#{app_name}_#{Volt.env}  | The name of the mongo database.                               |
-| db_host   | 'localhost'               | The hostname for the mongo database.                          |
-| db_port   | 27017                     | The port for the mongo database.                              |
-| compress_deflate | false              | If true, will run deflate in the app server, its better to let something like nginx do this though |
-
 ## Accessing DOM section in a controller
 
 TODO
+
+
+# Data Store
+
+Volt provides a data store collection on the front-end and the back-end.  In store, all plural names are assumed to be collections (like an array), and all singular are assumed to be a model (like a hash).
+
+```ruby
+store._things
+```
+
+**Work in progress**
+
+| state       | events bound | description                                                  |
+|-------------|--------------|--------------------------------------------------------------|
+| not_loaded  | no           | no events and no one has accessed the data in the model      |
+| loading     | maybe        | someone either accessed the data or bound an event           |
+| loaded      | yes          | data is loaded and there is an event bound                   |
+| dirty       | no           | data was either accessed without binding an event, or an event was bound, but later unbound. |
 
 # Contributing
 

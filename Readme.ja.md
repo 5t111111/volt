@@ -443,11 +443,11 @@ Voltのモデルでは、複数形の名前を持ったプロパティはArrayMo
 
 **上記以外のストレージについても計画中です。**
 
-## Store Collection
+## ストアコレクション
 
-The store collection backs data in the data store.  Currently the only supported data store is Mongo. (More coming soon, RethinkDb will probably be next)  You can use store very similar to the other collections.
+ストアコレクションは、データストアにデータを保存するためのものです。現在サポートされているデータストアはMongoのみです。(他のものも検討中です。おそらく次はRethinkDBに対応するでしょう) ストアは他のコレクションとほとんど同じように利用することができます。
 
-In Volt you can access ```store``` on the front-end and the back-end.  Data will automatically be synced between the front-end and the backend.  Any changes to the data in store will be reflected on any clients using the data (unless a [buffer](#buffer) is in use - see below).
+Voltではフロントエンドとバックエンドのどちらも```store```にアクセスすることができます。そして、フロントエンドとバックエンドでデータが自動的に同期されます。ストアにあるデータに対する変更はすべて、そのデータを利用しているすべてのクライアントに対して反映されます。 (ただし、後述の[buffer](#buffer)が使われている場合は除きます。).
 
 ```ruby
     store._items << {_name: 'Item 1'}
@@ -456,20 +456,20 @@ In Volt you can access ```store``` on the front-end and the back-end.  Data will
     # => <Model:70303681865560 {:_name=>"Item 1", :_id=>"e6029396916ed3a4fde84605"}>
 ```
 
-Inserting into ```store._items``` will create a ```_items``` table and insert the model into it.  An pseudo-unique _id will be automatically generated.
+```sore_items```へ挿入を行うと、```_items```テーブルが作成され、そこにモデルが格納されます。そのとき、仮の一意な _id が自動的に生成されます。
 
-Currently one difference between ```store``` and other collections is ```store``` does not store properties directly.  Only ArrayModels are allowed directly on ```store```
+現在、```store```とそれ以外のコレクションで異なっている点は、```store```はプロパティを直接持つことができないことです。```store```に直接設定することができるのはArrayModelのみです。
 
 ```ruby
     store._something = 'yes'
     # => won't be saved at the moment
 ```
 
-Note: We're planning to add support for direct ```store``` properties.
+メモ: ```store```に直接プロパティを設定できるようにすることも検討中です。
 
-## Sub Collections
+## サブコレクション
 
-Models can be nested on ```store```
+モデルは```store```上でネストすることができます。
 
 ```ruby
     store._states << {_name: 'Montana'}
@@ -488,7 +488,7 @@ Models can be nested on ```store```
     # #<ArrayModel:70129010999880 [<Model:70129010999460 {:_name=>"Montana", :_id=>"e3aa44651ff2e705b8f8319e"}>, <Model:70128997554160 {:_name=>"Montana", :_id=>"9aaf6d2519d654878c6e60c9"}>, <Model:70128997073860 {:_name=>"Idaho", :_id=>"5238883482985760e4cb2341"}>, <Model:70128997554160 {:_name=>"Montana", :_id=>"9aaf6d2519d654878c6e60c9"}>, <Model:70128997073860 {:_name=>"Idaho", :_id=>"5238883482985760e4cb2341"}>]>
 ```
 
-You can also create a Model first and then insert it.
+先にモデルを作って、それを挿入することも可能です。
 
 ```ruby
     montana = Model.new({_name: 'Montana'})
@@ -499,34 +499,34 @@ You can also create a Model first and then insert it.
     store._states << montana
 ```
 
-## Model Classes
+## Modelクラス
 
-By default all collections use the Model class by default.
+デフォルトでは、すべてのコレクションはModelクラスを使用します。
 
 ```ruby
     page._info.class
     # => Model
 ```
 
-You can provide classes that will be loaded in place of the standard model class.  You can place these in any app/{component}/models folder.  For example, you could add ```app/main/info.rb```  Model classes should inherit from ```Model```
+標準のModelクラスの代わりに使用するクラスを提供し、それを読み込むことも可能です。クラスは /app/{component}/models フォルダに格納します。例えば、```app/main/info.rb``` という具合です。モデルとするクラスは```Model```を継承する必要があります。
 
 ```ruby
     class Info < Model
     end
 ```
 
-Now when you access any sub-collection called ```_info```, it will load as an instance of ```Info```
+これで、```_info```というサブコレクションにアクセスすることができます。それは```Info```のインスタンスとして読み込まれます。
 
 ```ruby
     page._info.class
     # => Info
 ```
 
-This lets you set custom methods and validations within collections.
+これによって、コレクションにカスタムメソッドやバリデーションを設定することが可能です。
 
-## Buffers
+## バッファ
 
-Because the store collection is automatically synced to the backend, any change to a model's property will result in all other clients seeing the change immediately.  Often this is not the desired behavior.  To facilitate building [CRUD](http://en.wikipedia.org/wiki/Create,_read,_update_and_delete) apps, Volt provides the concept of a "buffer".  A buffer can be created from one model and will not save data back to its backing model until .save! is called on it.  This lets you create a form thats not saved until a submit button is pressed.
+ストアコレクションは自動的にバックエンドと同期するため、モデルのプロパティに対する更新は即座に他のクライアントにも反映されます。しかし、この動作が望ましくない場合もあります。[CRUD](http://en.wikipedia.org/wiki/Create,_read,_update_and_delete)アプリケーションの構築を容易にするため、Voltは"バッファ"という方法を的供します。バッファはモデルに対して作成することが可能で、save!を実行するまではバックエンドのモデルに反映されることはありません。これを利用することで、submitボタンが押されるまでは保存されないフォームを作成することが可能になります。
 
 ```ruby
     store._items << {_name: 'Item 1'}
@@ -551,7 +551,7 @@ Because the store collection is automatically synced to the backend, any change 
     # => 'Updated Item 1'
 ```
 
-```#save!``` on buffer also returns a [promise](http://opalrb.org/blog/2014/05/07/promises-in-opal/) that will resolve when the data has been saved back to the server.
+なお、バッファに対して```#save!```を実行したときの戻り値は[promise](http://opalrb.org/blog/2014/05/07/promises-in-opal/)です。promiseはデータがサーバーに保存された時点で解決(resolve)されます。
 
 ```ruby
     item1_buffer.save!.then do
@@ -561,7 +561,7 @@ Because the store collection is automatically synced to the backend, any change 
     end
 ```
 
-Calling .buffer on an existing model will return a buffer for that model instance.  If you call .buffer on an ArrayModel (plural sub-collection), you will get a buffer for a new item in that collection.  Calling .save! will then add the item to that sub-collection as if you had done << to push the item into the collection.
+既存のモデルに対して .buffer を実行した場合の戻り値は、そのモデルのインスタンスのバッファになります。また、ArrayModel(複数形のサブコレクション)に対して .buffer を実行した場合には、そのコレクションの新しい要素のバッファを取得します。save! を実行すると、<< で要素をコレクションにプッシュするかのように、その要素をサブコレクションに追加することができます。
 
 ## Validations
 

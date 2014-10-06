@@ -1,33 +1,23 @@
-This is a project forked from original Volt and is intended to translate Readme (and also other documents, if available) to Japanese, still in progress though.
+[![Gem Version](https://badge.fury.io/rb/volt.svg)](http://badge.fury.io/rb/volt)
+[![Code Climate](http://img.shields.io/codeclimate/github/voltrb/volt.svg)](https://codeclimate.com/github/voltrb/volt)
+[![Build Status](http://img.shields.io/travis/voltrb/volt/master.svg)](https://travis-ci.org/voltrb/volt)
+[![Inline docs](http://inch-ci.org/github/voltrb/volt.svg?branch=master)](http://inch-ci.org/github/voltrb/volt)
+[![Volt Chat](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/voltrb/volt)
 
-VoltのReadme(および他のドキュメントがあればそれも)を日本語訳をするためのプロジェクトですが、まだ不完全です。
-
-=======
-
-** Voltの現在の状態についてはここで確認してください。
-http://voltframework.com/blog
+** Voltの現在の開発状況はこちらで確認できます。 http://voltframework.com/blog
 
 # Volt
 
-VoltはRubyのWebフレームワークで、サーバーサイドとクライアントサイド、その両方のコードをRubyで書くことができます(クライアント側では[Opal](https://github.com/opal/opal)を利用)。
-Voltでは、ユーザーがページに対して行った操作に応じて、自動的にDOMが更新されます。
-また、ページの状態をURLとして保持することができます。
-ユーザーがURLに直接アクセスした場合、HTMLはまずサーバー上でレンダリングされます。
-これは、ロード時間の高速化や、検索エンジンによるインデックス化を容易にするためです。
+VoltはRubyのWebフレームワークで、サーバーサイドとクライアントサイドの両方のコードをRubyで記述することができます(クライアント側では[opal](https://github.com/opal/opal)を利用)。Voltでは、ユーザーがページに対して行った操作に応じて自動的にDOMが更新されます。また、ページの状態をURLとして保持することができます。ユーザーがURLに直接アクセスした場合、HTMLはまずサーバー上でレンダリングされます。 これは、ロード時間の高速化や、検索エンジンによるインデックス化を容易にするためです。
 
-Voltでは、HTTPを介してクライアントとサーバー間のデータを同期するのではなく、クライアントとサーバー間の永続的なコネクションを利用します。
-したがって、ある1つのクライアント上でデータが更新されたときには、データベース、および他のリスニング中のクライアント上でも更新が行われます。
-しかも、そのための設定用コードを書く必要はほとんどありません。
+Voltでは、HTTPを介してクライアントとサーバー間のデータを同期するのではなく、クライアントとサーバー間の永続的なコネクションを利用します。したがって、ある1つのクライアント上でデータが更新されたときには、データベース、および他のリスニング中のクライアント上でも更新が行われます。(しかも、そのための設定用コードを書く必要はほとんどありません。)
 
-ページのHTMLは、Handlebarsに似たテンプレート言語で記述します。
-Voltは、DOM(および値が更新されたことを検知したい他のすべてのコード)に対して、自動的かつ正確に変更を伝えるために、データフロー／リアクティブプログラミングを利用します。
-DOMのある値が変わったとき、Voltは、変更が必要なノードだけを正しく更新することができます。
+ページのHTMLはHandlebarsに似たテンプレート言語で記述します。Voltは、DOM(および値が更新されたことを検知したい他のすべてのコード)に対して、自動的に、かつ正確に変更を伝えるために、データフロー／リアクティブプログラミングを利用します。 DOMに何らかの変更があった場合、Voltは変更が必要なノードだけを正しく更新することができます。
 
 いくつかのデモ動画を用意しています。
-** 注意: これらのビデオは古いものです。新しいビデオを公開する予定です。
- - [Volt Todoアプリケーションの例](https://www.youtube.com/watch?v=6ZIvs0oKnYs)
+** 注意: これらのビデオは古いものです。近日中に新しいビデオを公開する予定です。 - [VoltでのTodoアプリケーションの例](https://www.youtube.com/watch?v=6ZIvs0oKnYs)
  - [Voltでブログを構築する](https://www.youtube.com/watch?v=c478sMlhx1o)
- - [Voltでのリアクティブバリューについて](https://www.youtube.com/watch?v=yZIQ-2irY-Q)
+ - [Voltのリアクティブバリューについて](https://www.youtube.com/watch?v=yZIQ-2irY-Q)
 
 デモアプリケーションも用意しています。
  - https://github.com/voltrb/todos3
@@ -36,31 +26,29 @@ DOMのある値が変わったとき、Voltは、変更が必要なノードだ�
 
 ## 目指すゴール
 
-Voltは以下のゴールを達成することを目標としています。
+Voltの目標は以下のゴールを達成することです。
 
 1. 開発者のしあわせ
 2. クライアントとサーバーでの「write once」
 3. クライアントとサーバー間の自動的なデータ同期
 4. 階層的なコンポーネントで構築されたアプリケーション。コンポーネントは(Gemを介して)共有可能。
 5. 並行性。Voltは、シンプルに並行性を実現するツールを提供する。コンポーネントのレンダリングは、サーバー上で並列実行される。
-6. 賢いアセット管理
+6. インテリジェントなアセット管理
 7. セキュアであること（わざわざ言うべきことではないですが）
 8. 高速/軽量
 9. 理解しやすいコードベース
-10. アップグレードをコントロール可能であること(xx #2)
+10. アップグレードをコントロール可能であること
 
 # ロードマップ
 
-Voltの核となる機能の多くはすでに実装済みです。
-しかし、1.0のリリースまでに対応すべきことがまだいくつか残っていて、そのほとんどはモデルに関するものです。
+Voltの核となる機能の多くはすでに実装済みです。 しかし、1.0のリリースまでに対応すべきことがまだいくつか残っていて、そのほとんどはモデルに関するものです。
 
 1. モデルのread/write権限
 2. ユーザーアカウント、ユーザーコレクション、サインアップ/ログインのテンプレート
 
-# Volt ガイド
+# VOLTガイド
 
-ここでは、Voltで基本的なWebアプリケーションを作成する手順を示します。
-このチュートリアルは、RubyとWeb開発の基本的な知識を持っていることを前提とします。
+ここでは、Voltで基本的なWebアプリケーションを作成する手順を示します。 このチュートリアルは、RubyとWeb開発の基本的な知識を持っていることを前提とします。
 
 まずはVoltをインストールします。
 
@@ -70,33 +58,41 @@ Voltの核となる機能の多くはすでに実装済みです。
 
     volt new project_name
 
-これで、基本的なプロジェクトがセットアップされます。
-では、サーバーを起動してみましょう。
+これで、基本的なプロジェクトがセットアップされます。 では、サーバーを起動してみましょう。
 
     bundle exec volt server
 
-以下で、Voltのコンソールにアクセスすることができます。
+Voltのコンソールにアクセスするには以下のようにします。
 
     bundle exec volt console
 
-# ガイドセクション
+# ガイドの目次
 
-1. [ヘルプ](#ヘルプ)
-2. [レンダリング](#レンダリング)
-  1. [状態と計算](#状態と計算)
-  1. [計算](#計算)
-3. [ビュー](#ビュー)
-  1. [バインディング](#バインディング)
-    1. [コンテンツバインディング](#コンテンツバインディング)
-    2. [ifバインディング](#ifバインディング)
-    3. [eachバインディング](#eachバインディング)
-    4. [属性バインディング](#属性バインディング)
-    5. [エスケープ](#エスケープ)
+1. [Getting Help](#getting-help)
+2. [Rendering](#rendering)
+  1. [States and Computations](#state-and-computations)
+    1. [Computations](#computations)
+  2. [Dependencies](#dependencies)
+3. [Views](#views)
+  1. [Bindings](#bindings)
+    1. [Content Binding](#content-binding)
+    2. [If Binding](#if-binding)
+    3. [Each Binding](#each-binding)
+    4. [Attribute Bindings](#attribute-bindings)
+  2. [Escaping](#escaping)
 4. [Models](#models)
-  1. [Provided Collections](#provided-collections)
-  2. [ArrayModel Events](#arraymodel-events)
-  3. [Automatic Model Conversion](#automatic-model-conversion)
+  1. [Nil Models](#nil-models)
+  2. [Provided Collections](#provided-collections)
+  3. [Store Collection](#store-collection)
+  4. [Sub Collections](#sub-collections)
+  5. [Model Classes](#model-classes)
+  6. [Buffers](#buffers)
+  7. [Validations](#validations)
+  8. [Model State](#model-state)
+  9. [ArrayModel Events](#arraymodel-events)
+  10. [Automatic Model Conversion](#automatic-model-conversion)
 5. [Controllers](#controllers)
+  1. [Reactive Accessors](#reactive-accessors)
 6. [Tasks](#tasks)
 7. [Components](#components)
   1. [Dependencies](#dependencies)
@@ -109,69 +105,57 @@ Voltの核となる機能の多くはすでに実装済みです。
 9. [Routes](#routes)
   1. [Routes file](#routes-file)
 10. [Testing](#testing)
-11. [Volt Helpers](#volt-helpers)
+11. [Debugging](#debugging)
+12. [Volt Helpers](#volt-helpers)
   1. [Logging](#logging)
-
+  2. [App Configuration](#app-configuration)
+13. [Contributing](#contributing)
 
 # ヘルプ
 
-Voltはまだ開発中ですが、早期のフィードバックは大歓迎です。
-開発者とコンタクトを取りたいときには、以下を使ってくれれば、誰かが素早く返答してくれることでしょう。
+Voltはまだ開発中ですが、早期のフィードバックは大歓迎です。開発者とコンタクトを取りたいときには、以下を使ってください。誰かが素早く返答してくれることでしょう。
 
-- **ヘルプが欲しい！**: [stackoverflow.com](http://www.stackoverflow.com) に投稿してください。質問に`voltrb`タグを付けるのを忘れないように。
-- **バグを見つけたとき**: [github issues](https://github.com/voltrb/volt/issues) に投稿してください。
+
+- **ヘルプが欲しい！**: [stackoverflow.com](http://www.stackoverflow.com) に投稿してください。質問に`voltrb`タグを付けるのを忘れないように。- **バグを見つけたとき**: [github issues](https://github.com/voltrb/volt/issues) に投稿してください。
 - **Voltへの提案がある、こんな機能が欲しい**: [github issues](https://github.com/voltrb/volt/issues) に投稿してください。
-- **Voltについて議論したい**: [gitterのチャット](https://gitter.im/voltrb/volt), 通常、Voltチームが誰かがオンラインです。喜んで助けになります。
+- **Voltについて議論したい**: [gitterのチャット](https://gitter.im/voltrb/volt) 通常、Voltチームが誰かがオンラインです。喜んで助けになります。
 
 
 # レンダリング
 
-ユーザーがウェブページに対して操作を行ったときに行いたい処理は、以下が典型的なものでしょう。
+ユーザーがウェブページで操作をしたときの処理は、以下が典型的なものでしょう。
 
 1. アプリケーションの状態を変える
 2. DOMを更新する
 
-例えば、ユーザーが「新しいtodoアイテムをtodoリストに追加」するボタンをクリックしたときの処理は、todoアイテムを表すオブジェクトを作成し、そのアイテムをリストのDOMに追加するものになると思います。
-その際、オブジェクトとDOMの状態が確実に同期しておくようにするためには、多くの手間のかかる処理が必要です。
+例えば、ユーザーが「新しいtodoアイテムをtodoリストに追加」するためにクリックしたときの処理は、「todoアイテムを表すオブジェクトを作成し、そのアイテムをリストのDOMに追加する」といったものになると思います。  その際、オブジェクトとDOMの状態が確実に同期しておくようにするためには、多くの手間のかかる処理が必要です。
 
-「リアクティブプログラミング」という手法は、DOMの管理をシンプルにするために使われます。
-この手法では、モデルを管理するイベントハンドラを持つ代わりに、リアクティブデータモデルを管理するイベントハンドラを持ちます。
-
+「リアクティブプログラミング」という手法は、DOMの管理をシンプルにするために使われます。  この手法では、モデルとDOMを管理するイベントハンドラを持つ代わりに、リアクティブなデータモデルを管理するイベントハンドラを持ちます。
 DOMのレイヤーを宣言的に記述しておくことで、データモデルをどのようにレンダリングすべきかについて自動的に判別することができます。
 
-## 状態と計算
 
-Webアプリケーションの中心的な仕事は状態を管理することです。
-多くのイベントは状態を変更します。
-例えば、フォーム要素へテキストを入力する、ボタンをクリックする、リンク、スクロール...これらの操作はすべてアプリケーションの状態を変更するものです。
+## 状態と評価について
 
-アプリケーションの状態管理をシンプルにするために、すべてのアプリケーションの状態は異なる場所に永続化されるモデルの中に保存されます。
-アプリケーションの状態を一元管理することで、ページを更新するために必要となる複雑なコードをかなり減らすことができます。
+Webアプリケーションの中心的な仕事は状態を管理することです。多くのイベントが状態を変更します。例えば、フォーム要素へテキストを入力する、ボタンをクリックする、リンク、スクロール...などなど。これらの操作はすべてアプリケーションの状態を変更するものです。かつては、ページに対するイベントは、ページが持っている状態をそれぞれ手動で変更していました。
 
-モデルのデータが変更されたとき、自動的にDOMを更新したいと思うことでしょう。
-そのためにVoltは、すべてのメソッド/Procの呼び出しを"監視(watch)"し、メソッド/procの呼び出しによってデータが変更されたときにもそれを知ることができます。xx
+Voltでは、アプリケーションの状態管理をシンプルにするため、すべてのアプリケーションの状態を永続化されるモデルの中に保存します。保存のしかたはオプションで様々なものを指定可能です。
+このようにアプリケーションの状態を一元管理することで、ページを更新するために本来必要となるはずの複雑なコードを、かなりの分量削減することができます。また、このことでページのHTMLを宣言的に組み立てることができます。ページのモデルへの結びつきは、関数とメソッド呼び出しによってバインドされます。
 
+モデルのデータが変更されたときには、それに応じて自動的にDOMを更新したいと考えることでしょう。それを実現するために、Voltはすべてのメソッド/Procの呼び出しを"監視(watch)"し、メソッド/procの呼び出しによってデータが変更されたときにも、そこことを知ることができます。
 
-### 計算
+### 評価
 
-実例を見てみましょう。
-ここでは、```page```コレクションを例とします。(より多くのコレクションは後で出てきます)
+実例を見てみましょう。ここでは、```page```コレクションを例とします。(後でより多くのコレクションを紹介します)
 
-はじめに、計算の監視を設定します。
-計算はProcに対する .watch! を呼び出すことで設定されまうｓ．
-ここでは、Ruby 1.9のProcの短縮シンタックス ```-> { .. }``` を使います。
-これを一度実行すると、page._name が変更されたときに毎回実行されるようになります。
-
+はじめに、評価のための監視設定を行います。計算はProcオブジェクトに対して .watch! を実行ことで設定されます。Ruby 1.9のProcの短縮シンタックス ```-> { .. }``` を使ったProcオブジェクトで .watch! を実行しています。これを一度実行すると、以後 page._name が変更されたときに毎回Procが実行されます。
 ```ruby
     page._name = 'Ryan'
-    -> { puts page._name }.watch!
-    # => Ryan
+    -> { puts page._name }.watch!    # => Ryan
     page._name = 'Jimmy'
     # => Jimmy
 ```
 
-page._nameに新しい値が代入されると、そのたびに計算が実行されます。
-前回計算されたデータが変更されたとき、計算は再度トリガーされて再実行されます。
+page._nameに新しい値が代入されると、そのたびに評価されます。また、前回の実行でアクセスされたデータのいずれかに変更があったときには、再評価が実行されます。これによって、メソッドを介してデータにアクセスしながらデータの監視を続けることができます。
 
 ```ruby
     page._first = 'Ryan'
@@ -183,8 +167,7 @@ page._nameに新しい値が代入されると、そのたびに計算が実行�
 
     -> do
       puts lookup_name
-    end.watch!
-    # => Ryan Stout
+    end.watch!    # => Ryan Stout
 
     page._first = 'Jimmy'
     # => Jimmy Stout
@@ -193,14 +176,12 @@ page._nameに新しい値が代入されると、そのたびに計算が実行�
     # => Jimmy Jones
 ```
 
-.watch! を実行したときの戻り値は計算オブジェクトです。
-もうそれ以上更新を受け取り必要がない場合には、計算オブジェクトに対し .stop メソッドを実行してください。
+.watch! を実行したとき、その戻り値はComputation(評価)オブジェクトです。もうそれ以上更新を受け取り必要がない場合には、評価オブジェクトに対し .stop メソッドを実行してください。
 
 ```ruby
     page._name = 'Ryan'
 
-    comp = -> { puts page._name }.watch!
-    # => Ryan
+    comp = -> { puts page._name }.watch!    # => Ryan
 
     page._name = 'Jimmy'
     # => Jimmy
@@ -219,83 +200,74 @@ As a Volt user, you rarely need to use Comptuations and Dependencies directly.  
 
 # ビュー
 
-Voltでは、ビューはHandlebarsに似たテンプレート言語を使用します。
-
+Voltでは、ビューにHandlebarsに似たテンプレート言語を使用します。ビューはセクションに分割することができます。例えば、セクションヘッダーは以下のようになります。
 
 ```html
 <:Body>
 ```
 
-セクションヘッダーは先頭が大文字で始まる必要があります。[コントロール](#コントロール)と混同しないようにしてください。
-セクションヘッダーに閉じタグは使いません。
-もしセクションヘッダーを書かなかった場合は、Bodyセクションであるとして扱います。
+セクションヘッダーは先頭が大文字で始まる必要があります。[コントロール](#コントロール)と混同しないようにしてください。また、セクションヘッダーに閉じタグは使いません。もしセクションヘッダーを書かなかった場合は、Bodyセクションであるとして扱います。
 
-セクションは同じファイルの内のコンテンツの異なるパーツ(タイトルと本文など)を区別するのに役立ちます。
+セクションは同じファイル上のコンテンツの異なるパーツ(タイトルと本文など)を区別するのに役立ちます。
 
 ## バインディング
 
-ReactiveValueの基礎を理解したら、次はバインディングの話です。
-Voltでは、Handlebarsに似たテンプレート言語でビューのコードを記述します。
-Voltはレンダリングのためのいくつかのバインディングを提供しています。
-例えば、{ と } で括られたものは、コンテンツバインディングとなります。
+Voltでは、Handlebarsに似たテンプレート言語でビューのコードを記述します。Voltはレンダリングのためのいくつかのバインディングを提供しています。例えば、{ と } で括られたものは、コンテンツのバインディングを表しています。
 
-### コンテンツバインディング
+### コンテンツのバインディング
 
-もっとも基本的なバインディングはコンテンツバインディングです。
+もっとも基本的なバインディングはコンテンツのバインディングです。
 
 ```html
-    <p>{some_method}<p>
+    <p>{{ some_method }}<p>
 ```
 
-コンテンツバインディングとは、{ と } の間のRubyコードを実行し、その戻り値をレンダリングするものです。
-もしその戻り値がリアクティブバリューであった場合は、'changed'イベントが発生したときには常に値が更新されます。
+コンテンツのバインディングとは、{ と } の間のRubyコードを実行し、その戻り値をレンダリングするものです。バインディングされたコンテンツのデータが変更を監視されているデータであった場合、その変更に応じてテキストが更新されます。
 
-### ifバインディング
+### Ifバインディング
 
-ifバインディングは、基本的な制御機構を提供します。
+ifバインディングは、基本的な制御文を提供します。
 
 ```html
-    {#if _some_check?}
+    {{ if _some_check?}}
       <p>render this</p>
-    {/}
+    {{ end }}
 ```
 
-ブロックは {/} で閉じます。
+ブロックは {{ end }} で閉じます。
 
-ifバインディングがレンダリングされるときは、#if に続くRubyコードが実行されます。
-そのコードが真の場合にのみ、下のコードがレンダリングされます。
-ここでも、戻り値がリアクティブバリューの場合には、変更に応じてその値が更新されます。
+ifバインディングがレンダリングされるときは、#if に続くRubyコードが実行されます。そのコードが真の場合にのみ、下のコードがレンダリングされます。ここでも、戻り値がリアクティブな値である場合には、変更に応じてその値が更新されます。
 
 また、ifバインディングは #elsif と #else ブロックを持つことができます。
 
 ```html
-    {#if _condition_1?}
+    {{ if _condition_1?}}
       <p>condition 1 true</p>
-    {#elsif _condition_2?}
+    {{ elsif _condition_2?}}
       <p>condition 2 true</p>
-    {#else}
+    {{ else }}
       <p>neither true</p>
-    {/}
+    {{ end }}
 ```
 
-### eachバインディング
+### Eachバインディング
 
-オブジェクトのイテレーションのために、eachバインディングが用意されています。
+オブジェクトのイテレーション操作のために、eachバインディングを利用することができます。
 
 ```html
-    {#each _items as item}
-      <p>{item}</p>
-    {/}
+    {{ _items.each do |item| }}
+      <p>{{ item }}</p>
+    {{ end }}
 ```
 
 上記では、_itemが配列だった場合、'item'に配列の各要素の値がセットされ、ブロックはその要素それぞれに対してレンダリングを行います。
 
-\#index メソッドを使うことで、配列の各要素の位置を得ることもできます。
+#index メソッドを使うことで、配列の各要素の位置を得ることもできます。
 
 ```html
-    {#each _items as item}
-      <p>{index}. {item}</p>
-    {/}
+    {{ each _items as item }}
+      <p>{{ index }}. {{ item }}</p>
+    {{ end }}
 ```
 
 例えば、['one', 'two', 'three'] という配列の場合には、このように出力されます。
@@ -306,48 +278,43 @@ ifバインディングがレンダリングされるときは、#if に続くRu
 
 ゼロオフセットを修正したければ {index + 1} としてください。
 
-配列の要素が追加、または削除された場合には、#eachバインディングは自動的かつ正確に、要素をDOMに追加、もしくはDOMから削除します。
+配列の要素が追加または削除された場合には、#eachバインディングは自動的かつ正確に要素をDOMに追加、もしくはDOMから削除します。
 
-## 属性バインディング
+### 属性バインディング
 
-バインディングは属性の中にも配置することができます。
+バインディングは属性内にも配置することができます。
 
 ```html
-    <p class="{#if _is_cool?}cool{/}">Text</p>
+    <p class="{{ if _is_cool?}}cool{{ end }}">Text</p>
 ```
 
 また、要素を"双方向バインディング"とするため、特別な機能が提供されます。
 
 ```html
-    <input type="text" value="{_name}" />
+    <input type="text" value="{{ _name }}" />
 ```
 
-上記の例で、_nameが変更された場合、フィールドも更新されます。
-反対に、フィールドが更新された場合には、_nameも更新されます。
+上記の例で、_nameが変更された場合、フィールドも更新されます。 反対に、フィールドが更新された場合には、_nameも更新されます。
 
 ```html
-    <input type="checkbox" checked="{_checked}" />
+    <input type="checkbox" checked="{{ _checked }}" />
 ```
 
-この例では、checked属性の値がtrueであるとき、チェックボックスはチェックされた状態になります。
-そして、チェックされた/チェック解除された という状態の変化に応じて、値がtrueまたはfalseに更新されます。
+この例では、checked属性の値がtrueであるとき、チェックボックスはチェックされた状態になります。そして、チェックされた/チェック解除された という状態の変化に応じて、値がtrueまたはfalseに更新されます。
 
-ラジオボタンもcheckedにバインドすることができますが、true/falseの代わりにフィールドの値がセットされます。
+ラジオボタンもcheckedにバインドすることができますが、true/falseの代わりに与えられたフィールドの値がセットされます。
 
 ```html
-    <input type="radio" checked="{_radio}" value="one" />
-    <input type="radio" checked="{_radio}" value="two" />
+    <input type="radio" checked="{{ _radio }}" value="one" />
+    <input type="radio" checked="{{ _radio }}" value="two" />
 ```
 
-ラジオボタンがチェックされたとき、常にcheckedはフィールドの値が設定されるようにバインドされます。
-checkedにバインドされた値が変更されたとき、ラジオボタンのバインドされた値にマッチするフィールドがチェックされた状態になります。
-メモ: ラジオボタンでは、これがもっとも便利な振る舞いだと思われます。
+ラジオボタンがチェックされたとき、checkedには常にフィールドの値が設定されるようにバインドされます。checkedにバインドされた値が変更されたとき、ラジオボタンのバインドされた値にマッチするすべてのフィールドがチェックされた状態になります。 checked.  メモ: ラジオボタンに対しては、この振る舞いがもっとも利便性が高いと考えています。
 
-セレクトボックスは値にバインドすることができます。
-(これは技術的には正しくありませんが、これも利便性のために追加している振る舞いです。)
+セレクトボックスは値に対してバインドすることができます。(技術的には正しくありませんが、これも利便性のために追加している振る舞いです。)
 
 ```html
-  <select value="{_rating}">
+  <select value="{{ _rating }}">
     <option value="1">*</option>
     <option value="2">**</option>
     <option value="3">***</option>
@@ -356,46 +323,42 @@ checkedにバインドされた値が変更されたとき、ラジオボタン�
   </select>
 ```
 
-選択されたオプションが変わった場合、それに合うように```_rating```が変更されます。
-```_rating```が変わったときには、マッチする最初のオプションが選択されます。
-マッチするオプションが存在しなかった場合には、セレクトボックスは未選択の状態になります。
+選択されたオプションが変更されると、それに合うように```_rating```が変更されます。```_rating```が変更された場合には、それにマッチする最初のオプションが選択された状態になります。マッチするオプションが存在しなかった場合には、セレクトボックスは未選択の状態になります。
 
 もしコントローラーが app/home/controller/index_controller.rb であり、ビューが app/home/views/index/index.html だった場合、すべてのメソッドはそのコントローラー上で呼び出されます。
 
-## エスケープ
+### テンプレートバインディング
 
-{ と } とバインディング以外で使いたい場合、3連の波括弧で囲んだ中にあるものはエスケープされ、バインディングとして処理されることはありません。
+すべての views/*.html ファイルはテンプレートとして扱われ、テンプレートバインディングを利用することで他のビューの内部でレンダリングすることが可能です。
 
 ```html
-    {{{ bindings look like: {this}  }}}
+    {{ template "header" }}
+```
+
+## エスケープ
+
+{{ と }) をバインディングの目的以外で使いたい場合には、3連の波括弧で囲んだ中にあるものはエスケープされバインディングとして処理されることはありません。
+
+
+```html
+    {{{ bindings look like: {{this}}  }}}
 ```
 
 # モデル
 
-多くのフレームワークでは、モデルという単語はデータベースとのORMに使われるものですが、Voltのモデルのコンセプトはそれとは少し異なります。
-Voltにおいて、モデルはデータを簡単に保存しておくために利用できるクラスを指します。
-モデルは、Persistorととも作成することができます。
-そのPersistorというものが、モデルにおいてデータを保持するための役割を果たします。
-Persistor無しでモデルを作った場合には、データは単純にクラスのインスタンスに保存されます。
-どのようにモデルを使うのか、まず見てみましょう。
+多くのフレームワークでは、モデルというのはデータベースとのORMにおいて使われる単語ですが、Voltのモデルのコンセプトはそれとは少し異なります。Voltにおいて、モデルはデータを簡単に保存しておくために利用できるクラスを指します。モデルは、Persistorとともに作成することができます。そのPersistorというものが、モデルのデータを保持しておく役割を果たします。Persistor無しでモデルを作った場合には、データは単純にクラスのインスタンスに保存されます。どのようにモデルを使うのか、まず見てみましょう。
 
-Voltには多くのモデルがビルトインされており、その1つに `page` モデルがあります。
-コントローラーで `#page` を呼び出すことでモデルにアクセスすることができます。
-Voltが提供するモデルはReactiveValueに自動的にラップされているので、更新のイベントを追跡することが可能です。
-
-Volt
+Voltには多くのモデルがビルトインされており、その1つに `page` モデルがあります。コントローラーで `#page` を呼び出すことでそのモデルにアクセスすることができます。
 
 ```ruby
     page._name = 'Ryan'
     page._name
-    # => @'Ryan'
+    # => 'Ryan'
 ```
 
-モデルは、アンダースコア(_)で始まるゲッター/セッターでアクセス可能なハッシュのように振る舞います。
-もし、その「アンダースコアメソッド」がまだアサインされていなかった場合には、"nilモデル"が返ってきます。
-アンダースコアを前置することによって、存在しないメソッドを誤って呼び出すことを回避したり、例外が発生することを避けnilモデルを返すようにすることができます。
-モデルがどのようなフィールドを持つかを定義しておく必要はありません。
-フィールドはハッシュのように振る舞いますが、アクセスと代入については異なるシンタックスを使用します。
+モデルは、先頭がアンダースコアで始まるゲッター/セッターでアクセス可能なハッシュのように振る舞います。もし、そのアトリビュートまだ設定されていないものだった場合には、"nilモデル"が返ってきます。アンダースコアを前置することによって、存在しないメソッドを誤って呼び出すことを回避したり、例外が発生することを避けnilモデルを返すようにすることができます。フィールドはハッシュのように振る舞いますが、アクセスと代入については異なるシンタックスを使用します。
+
+  # TODO: Add docs on fields in classes
 
 また、モデルは中間的なモデルを作成することなくネストすることができます。
 
@@ -408,26 +371,30 @@ Volt
     # => @#<Model:_settings {:_color=>"blue"}>
 ```
 
-ネストされたデータは、代入時に自動的に設定されます。
-上記の例では、page._settingはpageモデルの一部を形成するモデルとなります。
+ネストされたデータは、代入時に自動的に設定されます。上記の例では、page._settingはpageモデルの一部を形成するモデルとなります。このことによって、事前に設定を行うことなく、ネストされたモデルをバインディングすることが可能になっています。
 
-また、定義されていないデータの場合には追加することができます。
-Voltのモデルでは、複数形の名前を持ったプロパティは配列(より厳密に言えばArrayModels)を持っているとされます。
+Voltのモデルでは、複数形の名前を持ったプロパティはArrayModelsのインスタンスを返します。ArrayModelは通常のアレイと同じように振る舞います。要素の追加/削除は通常のアレイと同様のメソッド (#<<, push, append, delete, delete_at, etc...) で行うことができます。
 
 ```ruby
-    page._items << 'item 1'
     page._items
-    # => @#<ArrayModel ["item 1", "item 2"]>
+    # #<ArrayModel:70303686333720 []>
+
+    page._items << {_name: 'Item 1'}
+
+    page._items
+    # #<ArrayModel:70303686333720 [<Model:70303682055800 {:_name=>"Item 1"}>]>
+
+    page._items.size
+    # => 1
 
     page._items[0]
-    # => @"item 1"
+    # => <Model:70303682055800 {:_name=>"Item 1"}>
 ```
 
-ArrayModelsに対しては、通常の配列と同じように追加や参照を行うことができます。
 
-### Nil Models
+## Nilモデル
 
-As a convience, calling something like ```page._info``` returns what's called a NilModel (assuming it isn't already initialized).  NilModels are place holders for future possible Models.  NilModels allow us to bind deeply nested values without initializing any intermediate values.
+利便性を高めるために、例えば```page._info```を実行した時にはNilModelを返すようになっています。(このとき、._infoはまだ設定されていないものとします。)NilModelは将来的に利用するモデルのプレースホルダーです。NilModelがあることによって、わざわざ中間の値を初期化することなく、深くネストされた値のバインドをすることが可能になっています。
 
 ```ruby
     page._info
@@ -440,49 +407,199 @@ As a convience, calling something like ```page._info``` returns what's called a 
     # => <Model:70161625994820 {:_info=><Model:70161633901800 {:_name=>"Ryan"}>}>
 ```
 
-One gotchya with NilModels is that they are a truthy value (since only nil and false are falsy in ruby).  To make things easier, calling ```.nil?``` on a NilModel will return true.
+1つ注意しておくべきことは、NilModelは「真」の値であるということです。(Rubyではnilとfalseのみがfalseとして扱われます。)分かりやすくするために、NilModelに対して```.nil?```を実行するとtrueを返すようになっています。
 
-One common place we use a truthy check is in setting up default values with || (logical or)  Volt provides a convenient method that does the same thing `#or`, but works with NilModels.
+真偽チェックを利用するよくあるケースとして、|| (論理和)を使ってデフォルト値を設定するものがあります。Voltはこれと同様の働きをするメソッド #or を提供します。これはNilModelに対しても有効です。
 
-Instead of
+こう書くのではなく、
 
 ```ruby
     a || b
 ```
 
-Simply use:
+こう書きます。
 
 ```ruby
     a.or(b)
 ```
 
-`#and` works the same way as &&.  #and and #or let you easily deal with default values involving NilModels.
+#and は && と同様の働きをします。#and と #or によって、NilModelも含めて、初期値の扱いを簡単にすることができます。
 
 -- TODO: Document .true? / .false?
 
+
 ## 提供されるコレクション
 
-前述の通り、Voltにはコントローラーからアクセス可能な豊富なデフォルトのコレクションモデルが搭載されています。
-そして、そのそれぞれが異なる場所に保存されます。
+前述の通り、Voltにはコントローラーからアクセス可能な豊富なデフォルトのコレクションモデルが用意されています。そして、そのそれぞれが異なる場所に保存されます。
 
 | 名前          | 保存場所                                                                                                                           |
 |---------------|------------------------------------------------------------------------------------------------------------------------------------|
-| page          | pageは一時的なデータ保存場所を提供します。そのページが生きている間だけ残ります。                                                   |
-| store         | storeはバックエンドのデータベースと動機し、クエリメソッドを提供します。                                                            |
+| page          | pageは一時的なデータ保存場所を提供します。そのページが生きている間だけ残ります。|
+| store         | storeはバックエンドのデータベースと同期し、クエリメソッドを提供します。|
 | local_store   | データはローカルに保存されます。                                                                                         |
-| params        | データはパラメータとURLに保存されます。どのようにURLに表示するかはルーティングの設定にしたがいます。(詳細はルートを御覧ください。) |
-| flash         | 代入された文字列がページの先頭に表示され、ユーザーによるページの移動で消去されます。                                               |
+| params        | データはパラメータとURLに保存されます。どのようにURLに表示するかはルーティングの設定にしたがいます。(詳細はルートを御覧ください) |
+| flash         | 代入された文字列がページの先頭に表示され、ユーザーによるページの移動で消去されます。|
 | controller    | 現在のコントローラーのためのモデルです。                                                                                           |
 
 **上記以外のストレージについても計画中です。**
 
-## ArrayModelイベント
+## Store Collection
 
-## モデルイベント
+The store collection backs data in the data store.  Currently the only supported data store is Mongo. (More coming soon, RethinkDb will probably be next)  You can use store very similar to the other collections.
 
-モデルは、そのデータが更新されたときにイベントをトリガーします。
-現在、モデルは、added, removed の2つのイベントを発生させます。
+In Volt you can access ```store``` on the front-end and the back-end.  Data will automatically be synced between the front-end and the backend.  Any changes to the data in store will be reflected on any clients using the data (unless a [buffer](#buffer) is in use - see below).
 
+```ruby
+    store._items << {_name: 'Item 1'}
+
+    store._items[0]
+    # => <Model:70303681865560 {:_name=>"Item 1", :_id=>"e6029396916ed3a4fde84605"}>
+```
+
+Inserting into ```store._items``` will create a ```_items``` table and insert the model into it.  An pseudo-unique _id will be automatically generated.
+
+Currently one difference between ```store``` and other collections is ```store``` does not store properties directly.  Only ArrayModels are allowed directly on ```store```
+
+```ruby
+    store._something = 'yes'
+    # => won't be saved at the moment
+```
+
+Note: We're planning to add support for direct ```store``` properties.
+
+## Sub Collections
+
+Models can be nested on ```store```
+
+```ruby
+    store._states << {_name: 'Montana'}
+    montana = store._states[0]
+
+    montana._cities << {_name: 'Bozeman'}
+    montana._cities << {_name: 'Helena'}
+
+    store._states << {_name: 'Idaho'}
+    idaho = store._states[1]
+
+    idaho._cities << {_name: 'Boise'}
+    idaho._cities << {_name: 'Twin Falls'}
+
+    store._states
+    # #<ArrayModel:70129010999880 [<Model:70129010999460 {:_name=>"Montana", :_id=>"e3aa44651ff2e705b8f8319e"}>, <Model:70128997554160 {:_name=>"Montana", :_id=>"9aaf6d2519d654878c6e60c9"}>, <Model:70128997073860 {:_name=>"Idaho", :_id=>"5238883482985760e4cb2341"}>, <Model:70128997554160 {:_name=>"Montana", :_id=>"9aaf6d2519d654878c6e60c9"}>, <Model:70128997073860 {:_name=>"Idaho", :_id=>"5238883482985760e4cb2341"}>]>
+```
+
+You can also create a Model first and then insert it.
+
+```ruby
+    montana = Model.new({_name: 'Montana'})
+
+    montana._cities << {_name: 'Bozeman'}
+    montana._cities << {_name: 'Helena'}
+
+    store._states << montana
+```
+
+## Model Classes
+
+By default all collections use the Model class by default.
+
+```ruby
+    page._info.class
+    # => Model
+```
+
+You can provide classes that will be loaded in place of the standard model class.  You can place these in any app/{component}/models folder.  For example, you could add ```app/main/info.rb```  Model classes should inherit from ```Model```
+
+```ruby
+    class Info < Model
+    end
+```
+
+Now when you access any sub-collection called ```_info```, it will load as an instance of ```Info```
+
+```ruby
+    page._info.class
+    # => Info
+```
+
+This lets you set custom methods and validations within collections.
+
+## Buffers
+
+Because the store collection is automatically synced to the backend, any change to a model's property will result in all other clients seeing the change immediately.  Often this is not the desired behavior.  To facilitate building [CRUD](http://en.wikipedia.org/wiki/Create,_read,_update_and_delete) apps, Volt provides the concept of a "buffer".  A buffer can be created from one model and will not save data back to its backing model until .save! is called on it.  This lets you create a form thats not saved until a submit button is pressed.
+
+```ruby
+    store._items << {_name: 'Item 1'}
+
+    item1 = store._items[0]
+
+    item1_buffer = item1.buffer
+
+    item1_buffer._name = 'Updated Item 1'
+    item1_buffer._name
+    # => 'Updated Item 1'
+
+    item1._name
+    # => 'Item 1'
+
+    item1_buffer.save!
+
+    item1_buffer._name
+    # => 'Updated Item 1'
+
+    item1._name
+    # => 'Updated Item 1'
+```
+
+```#save!``` on buffer also returns a [promise](http://opalrb.org/blog/2014/05/07/promises-in-opal/) that will resolve when the data has been saved back to the server.
+
+```ruby
+    item1_buffer.save!.then do
+      puts "Item 1 saved"
+    end.fail do |err|
+      puts "Unable to save because #{err}"
+    end
+```
+
+Calling .buffer on an existing model will return a buffer for that model instance.  If you call .buffer on an ArrayModel (plural sub-collection), you will get a buffer for a new item in that collection.  Calling .save! will then add the item to that sub-collection as if you had done << to push the item into the collection.
+
+## Validations
+
+Within a model class, you can setup validations.  Validations let you restrict the types of data that can be stored in a model.  Validations are mostly useful for the ```store``` collection, though they can be used elsewhere.
+
+At the moment we only have two validations implemented (length and presence).  Though a lot more will be coming.
+
+```ruby
+    class Info < Model
+      validate :_name, length: 5
+      validate :_state, presence: true
+    end
+```
+
+When calling save on a model with validations, the following occurs:
+
+1. Client side validations are run; if they fail, the promise from ```save!``` is rejected with the error object.
+2. The data is sent to the server and client and server side validations are run on the server; any failures are returned and the promise is rejected on the front-end (with the error object)
+    - re-running the validations on the server side makes sure that no data can be saved that doesn't pass the validations
+3. If all validations pass, the data is saved to the database and the promise resolved on the client.
+4. The data is synced to all other clients.
+
+
+## Model State
+
+**Work in progress**
+
+| state       | events bound | description                                                  |
+|-------------|--------------|--------------------------------------------------------------|
+| not_loaded  | no           | no events and no one has accessed the data in the model      |
+| loading     | maybe        | someone either accessed the data or bound an event           |
+| loaded      | yes          | data is loaded and there is an event bound                   |
+| dirty       | no           | data was either accessed without binding an event, or an event was bound, but later unbound. |
+
+
+## ArrayModel Events
+
+Models trigger events when their data is updated.  Currently, models emit two events: added and removed.  For example:
 
 ```ruby
     model = Model.new
@@ -496,20 +613,18 @@ Simply use:
     # => item removed
 ```
 
-## 自動モデル変換
+## Automatic Model Conversion
 
 ### Hash -> Model
 
-
-利便性のために、あるModelの中にHashを入れた場合、それは自動的にModelに変換されます。
-ModelはHashに似ていますが、例えば永続化やイベントのトリガなどの機能がある点が異なります。
+For convenience, when placing a hash inside of another model, it is automatically converted into a model.  Models are similar to hashes, but provide support for things like persistence and triggering reactive events.
 
 ```ruby
     user = Model.new
     user._name = 'Ryan'
     user._profiles = {
-      twitter: 'http://www.twitter.com/ryanstout',
-      dribbble: 'http://dribbble.com/ryanstout'
+      _twitter: 'http://www.twitter.com/ryanstout',
+      _dribbble: 'http://dribbble.com/ryanstout'
     }
 
     user._name
@@ -520,16 +635,13 @@ ModelはHashに似ていますが、例えば永続化やイベントのトリ�
     # => Model
 ```
 
-ModelへのアクセスのしかたはHashとは異なります。`model[:symbol]`を使うのではなく、`model.method_name`メソッドを呼び出します。
-これは動的に生成される統一的なデータ保存機構であり、アクセスのためのコードを変更することなく、セッターとゲッターが追加されます。
+Models are accessed differently from hashes.  Instead of using `model[:symbol]` to access, you call a method `model.method_name`.  This provides a dynamic unified store where setters and getters can be added without changing any access code.
 
-Modelに対して`#to_h`を実行すると、RubyのHashに戻したものを得ることができます。
-
+You can get a Ruby hash back out by calling `#to_h` on a Model.
 
 ### Array -> ArrayModel
 
-Modelの中のArrayは自動的にArrayModelのインスタンスに変換されます。
-ArrayModelは通常のArrayと同様に振る舞いますが、バックエンドのデータにバインドしたり、リアクティブイベントを発生させたりできる点が異なります。
+Arrays inside of models are automatically converted to an instance of ArrayModel.  ArrayModels behave the same as a normal Array except that they can handle things like being bound to backend data and triggering reactive events.
 
 ```ruby
     model = Model.new
@@ -543,8 +655,7 @@ ArrayModelは通常のArrayと同様に振る舞いますが、バックエン�
 ```
 
 
-ModelやArrayModelを通常のハッシュやアレイに戻したい場合には、それぞれ .to_h と .to_a を実行してください。
-(JavaScriptのコードに渡すために)JavaScriptのオブジェクトに変換したい場合には、`#to_n` (to native)を実行してください。
+To convert a Model or an ArrayModel back to a normal hash, call .to_h or .to_a respectively.  To convert them to a JavaScript Object (for passing to some JavaScript code), call `#to_n` (to native).
 
 ```ruby
     user = Model.new
@@ -564,8 +675,7 @@ ModelやArrayModelを通常のハッシュやアレイに戻したい場合に�
     # => [1,2,3,4]
 ```
 
-ArrayModelに対して.to_aを実行することで通常の配列を得ることができます。
-
+You can get a normal array again by calling .to_a on an ArrayModel.
 
 # Controllers
 
@@ -591,6 +701,8 @@ A controller can be any class in Volt, however it is common to have that class i
     end
 ```
 
+When a model is set, any missing methods will be proxied to the model.  This lets you bind within the views without prefixing the model object every time.  It also lets you change out the current model and have the views update automatically.
+
 In methods, the `#model` method returns the current model.
 
 See the [provided collections](#provided-collections) section for a list of the available collection models.
@@ -599,7 +711,7 @@ You can also provide your own object to model.
 
 In the example above, any methods not defined on the TodosController will fall through to the provided model.  All views in views/{controller_name} will have this controller as the target for any Ruby run in their bindings.  This means that calls on self (implicit or with self.) will have the model as their target (after calling through the controller).  This lets you add methods to the controller to control how the model is handled, or provide extra methods to the views.
 
-Volt is more similar to an MVVM architecture than an MVC architecture.  Instead of the controllers passing data off to the views, the controllers are the context for the views.  When using a ModelController, the controller automatically forwards all methods it does not handle to the model.  This is convenient since you can set a model in the controller and then access its properties directly with methods in bindings.  This lets you do something like ```{_name}``` instead of something like ```{@model._name}```
+Volt is more similar to an MVVM architecture than an MVC architecture.  Instead of the controllers passing data off to the views, the controllers are the context for the views.  When using a ModelController, the controller automatically forwards all methods it does not handle to the model.  This is convenient since you can set a model in the controller and then access its properties directly with methods in bindings.  This lets you do something like ```{{ _name }}``` instead of something like ```{{ @model._name }}```
 
 Controllers in the app/home component do not need to be namespaced, all other components should namespace controllers like so:
 
@@ -756,7 +868,6 @@ or
 
 To find the control's views and optional controller, Volt will search the following (in order):
 
-
 | Section   | View File    | View Folder    | Component   |
 |-----------|--------------|----------------|-------------|
 | :{name}   |              |                |             |
@@ -804,23 +915,40 @@ Once the view file for the control or template is found, it will look for a matc
 
 # Control Arguments/Attributes
 
-Like other html tags, controls can be passed attributes.  These are then converted into a hash and passed as the first argument to the initialize method on the controller.  The standard ModelController's initialize will then assign each key/value in the attributes hash as instance values.  This makes it easy to access attributes passed in.
+Like other html tags, controls can be passed attributes.  These are then converted into an object that is passed as the first argument to the initialize method on the controller.  The standard ModelController's initialize will then assign the object to the attrs property which can be accessed with ```#attrs```  This makes it easy to access attributes passed in.
 
 ```html
 
 <:Body>
 
   <ul>
-    {#each _todos as todo}
-      <:todo name="{todo._name}" />
-    {/}
+    {{ _todos.each do |todo| }}
+      <:todo name="{{ todo._name }}" />
+    {{ end }}
   </ul>
 
 <:Todo>
-  <li>{@name}</li>
-
+  <li>{{ attrs.name }}</li>
 ```
 
+Instead of passing in individual attributes, you can also pass in a Model object with the "model" attribute and it will be set as the model for the controller.
+
+```html
+<:Body>
+  <ul>
+    {{ _todos.each do |todo| }}
+      <:todo model="{{ todo }}" />
+    {{ end }}
+  </ul>
+
+<:Todo>
+  <li>
+    {{ _name }} -
+    {{ if _complete }}
+      Complete
+    {{ end }}
+  </li>
+```
 
 # Routes
 
@@ -833,17 +961,17 @@ This means that routes in Volt have to be able to go both from URL to params and
 Routes are specified on a per-component basis in the config/routes.rb file.  Routes simply map from URL to params.
 
 ```ruby
-    get "/todos", _view: 'todos'
+    get "/todos", {_view: 'todos'}
 ```
 
-Routes take two arguments, a path, and a params hash.  When a new URL is loaded and the path is matched on a route, the params will be set to the params provided for that route.
+Routes take two arguments; a path, and a params hash.  When a new URL is loaded and the path is matched on a route, the params will be set to the params provided for that route.  The specified params hash acts as a constraint.  An empty hash will match any url.  Any params that are not matched will be placed in the query parameters.
 
 When the params are changed, the URL will be set to the path for the route whose params hash matches.
 
 Route paths can also contain variables similar to bindings:
 
 ```ruby
-    get "/todos/{_index}", _view: 'todos'
+    get "/todos/{{ _index }}", _view: 'todos'
 ```
 
 In the case above, if any URL matches /todos/*, (where * is anything but a slash), it will be the active route. ```params._view``` would be set to 'todos', and ```params._index``` would be set to the value in the path.
@@ -852,16 +980,7 @@ If ```params._view``` were 'todos' and ```params._index``` were not nil, the rou
 
 Routes are matched top to bottom in a routes file.
 
-## Debugging
-
-An in browser irb is in the works.  We also have source maps support, but they are currently disabled by default.  To enable them run:
-
-    MAPS=true volt s
-
-This feature is disabled by default because (due to the volume of pages rendered) it slows down page rendering. We're working with the opal and sprockets teams to make it so everything is still served in one big source maps file (which would show the files as they originated on disk)
-
-
-## Channel
+# Channel
 
 Controllers provide a `#channel` method, that you can use to get the status of the connection to the backend.  Channel is provided in a ReactiveValue, and when the status changes, the changed events are triggered.  It provides the following:
 
@@ -872,6 +991,7 @@ Controllers provide a `#channel` method, that you can use to get the status of t
 | error       | the error message for the last failed connection          |
 | retry_count | the number of reconnection attempts that have been made without a successful connection |
 | reconnect_interval | the time until the next reconnection attempt (in seconds) |
+
 
 # Testing
 
@@ -892,6 +1012,14 @@ To run Capybara tests, you need to specify a driver.  The following drivers are 
 
 Chrome is not supported due to [this issue](https://code.google.com/p/chromedriver/issues/detail?id=887#makechanges) with ChromeDriver.  Feel free to go [here](https://code.google.com/p/chromedriver/issues/detail?id=887#makechanges) and pester the chromedriver team to fix it.
 
+# Debugging
+
+An in browser irb is in the works.  We also have source maps support, but they are currently disabled by default.  To enable them run:
+
+    MAPS=true volt s
+
+This feature is disabled by default because (due to the volume of pages rendered) it slows down page rendering. We're working with the opal and sprockets teams to make it so everything is still served in one big source maps file (which would show the files as they originated on disk)
+
 # Volt Helpers
 
 ## Logging
@@ -908,27 +1036,26 @@ You can change the logger with:
 Volt.logger = Logger.new
 ```
 
+## App Configuration
+
+Like many frameworks, Volt changes some default settings based on an environment flag.  You can set the volt environment with the VOLT_ENV environment variable.
+
+All files in the app's ```config``` folder are loaded when Volt boots.  This is similar to the ```initializers``` folder in Rails.
+
+Volt does its best to start with useful defaults.  You can configure things like your database and app name in the config/app.rb file.  The following are the current configuration options:
+
+| name      | default                   | description                                                   |
+|-----------|---------------------------|---------------------------------------------------------------|
+| app_name  | the current folder name   | This is used internally for things like logging.              |
+| db_driver | 'mongo'                   | Currently mongo is the only supported driver, more coming soon|
+| db_name   | "#{app_name}_#{Volt.env}  | The name of the mongo database.                               |
+| db_host   | 'localhost'               | The hostname for the mongo database.                          |
+| db_port   | 27017                     | The port for the mongo database.                              |
+| compress_deflate | false              | If true, will run deflate in the app server, its better to let something like nginx do this though |
+
 ## Accessing DOM section in a controller
 
 TODO
-
-
-# Data Store
-
-Volt provides a data store collection on the front-end and the back-end.  In store, all plural names are assumed to be collections (like an array), and all singular are assumed to be a model (like a hash).
-
-```ruby
-store._things
-```
-
-**Work in progress**
-
-| state       | events bound | description                                                  |
-|-------------|--------------|--------------------------------------------------------------|
-| not_loaded  | no           | no events and no one has accessed the data in the model      |
-| loading     | maybe        | someone either accessed the data or bound an event           |
-| loaded      | yes          | data is loaded and there is an event bound                   |
-| dirty       | no           | data was either accessed without binding an event, or an event was bound, but later unbound. |
 
 # Contributing
 

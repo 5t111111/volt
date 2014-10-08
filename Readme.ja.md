@@ -563,11 +563,11 @@ Voltではフロントエンドとバックエンドのどちらも```store```�
 
 既存のモデルに対して .buffer を実行した場合の戻り値は、そのモデルのインスタンスのバッファになります。また、ArrayModel(複数形のサブコレクション)に対して .buffer を実行した場合には、そのコレクションの新しい要素のバッファを取得します。save! を実行すると、<< で要素をコレクションにプッシュするかのように、その要素をサブコレクションに追加することができます。
 
-## Validations
+## バリデーション
 
-Within a model class, you can setup validations.  Validations let you restrict the types of data that can be stored in a model.  Validations are mostly useful for the ```store``` collection, though they can be used elsewhere.
+モデルのクラスにはバリデーションを設定することが可能です。バリデーションによって、モデルに保存することができるデータの種類を制限することができます。特に```store```コレクションに対してバリデーションは有効ですが、他でも利用することができます。
 
-At the moment we only have two validations implemented (length and presence).  Though a lot more will be coming.
+現在のところ、2種類(lengthとpresence)のバリデーションが実装されています。これから追加されていく予定です。
 
 ```ruby
     class Info < Model
@@ -576,13 +576,10 @@ At the moment we only have two validations implemented (length and presence).  T
     end
 ```
 
-When calling save on a model with validations, the following occurs:
+バリデーションがある場合、ここでモデルに対して save を実行すると、以下のようになります。
 
-1. Client side validations are run; if they fail, the promise from ```save!``` is rejected with the error object.
-2. The data is sent to the server and client and server side validations are run on the server; any failures are returned and the promise is rejected on the front-end (with the error object)
-    - re-running the validations on the server side makes sure that no data can be saved that doesn't pass the validations
-3. If all validations pass, the data is saved to the database and the promise resolved on the client.
-4. The data is synced to all other clients.
+1. クライアントサイトでバリデーションが実行されます。もしバリデーションがエラーになった場合、```save!```の結果のpromiseがエラーオブジェクトを伴ってrejectされます。2. データはサーバーに送られ、クライアントとサーバーサイドのバリデーションがサーバー上で実行されます。すべてのエラーが返され、promiseはフロントエンドで(エラーオブジェクトを伴って)rejectされます。
+    - バリデーションがサーバーサイドでも再度実行されることで、バリデーションにパスしないデータが保存されてしまうことを確実に回避します。すべてのバリデーションにパスすると、データはデータベースに保存され、promiseはクライアント上でresolveされます。4. データが他のすべてのクライアントと同期されます。
 
 
 ## Model State

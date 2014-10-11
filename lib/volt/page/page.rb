@@ -4,6 +4,7 @@ if RUBY_PLATFORM == 'opal'
 end
 require 'volt/models'
 require 'volt/controllers/model_controller'
+require 'volt/tasks/task_handler'
 require 'volt/page/bindings/attribute_binding'
 require 'volt/page/bindings/content_binding'
 require 'volt/page/bindings/each_binding'
@@ -27,7 +28,6 @@ require 'volt/models/url'
 require 'volt/page/url_tracker'
 require 'volt/benchmark/benchmark'
 require 'volt/page/tasks'
-
 
 
 class Page
@@ -138,7 +138,8 @@ class Page
   end
 
   def add_model(model_name)
-    @model_classes[model_name] = Object.const_get(model_name.camelize)
+    model_name = model_name.camelize
+    @model_classes[model_name] = Object.const_get(model_name)
   end
 
   def add_template(name, template, bindings)

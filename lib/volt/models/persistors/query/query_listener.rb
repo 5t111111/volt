@@ -15,10 +15,9 @@ class QueryListener
 
   def add_listener
     @listening = true
-    @tasks.call('QueryTasks', 'add_listener', @collection, @query) do |results, errors|
-      # puts "Query Tasks: #{results.inspect} - #{@stores.inspect} - #{self.inspect}"
+    QueryTasks.add_listener(@collection, @query).then do |results, errors|
       # When the initial data comes back, add it into the stores.
-      @stores.each do |store|
+      @stores.dup.each do |store|
         # Clear if there are existing items
         store.model.clear if store.model.size > 0
 
@@ -60,7 +59,7 @@ class QueryListener
       # Stop listening
       if @listening
         @listening = false
-        @tasks.call('QueryTasks', 'remove_listener', @collection, @query)
+        QueryTasks.remove_listener(@collection, @query)
       end
     end
   end

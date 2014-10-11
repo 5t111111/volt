@@ -56,18 +56,17 @@ class ComponentPaths
         $LOAD_PATH.unshift(app_folder)
 
         # Sort so we get consistent load order across platforms
-        Dir["#{app_folder}/*/{controllers,models}/*.rb"].sort.each do |ruby_file|
+        Dir["#{app_folder}/*/{controllers,models,tasks}/*.rb"].each do |ruby_file|
           path = ruby_file.gsub(/^#{app_folder}\//, '')[0..-4]
           require(path)
         end
-      end
-    end
 
-    # add each tasks folder directly
-    components.sort.each do |name,component_folders|
-      component_folders.sort.each do |component_folder|
-        Dir["#{component_folder}/tasks"].sort.each do |tasks_folder|
-          $LOAD_PATH.unshift(tasks_folder)
+        if Volt.server?
+          # Add models to page
+          Dir["#{app_folder}/*/models/*.rb"].each do |ruby_file|
+            class_name = File.basename(ruby_file).gsub(/[.]rb$/, '')
+            $page.add_model(class_name)
+          end
         end
       end
     end

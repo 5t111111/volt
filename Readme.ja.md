@@ -1,8 +1,10 @@
 
 # 注意
 
-Volt のドキュメント日本語化プロジェクトは、オリジナルの Volt リポジトリ側の変更に合わせて、独立した別プロジェクトへ移動しました。
+Volt のドキュメント日本語化プロジェクトは、オリジナルの Volt のドキュメントに取り込まれました。
 
-https://github.com/5t111111/docs
+http://docs.voltframework.com
+
+https://github.com/voltrb/docs
 
 このプロジェクトは今後更新されません。
